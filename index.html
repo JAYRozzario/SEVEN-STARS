@@ -4,8 +4,8 @@
 <meta name="google-site-verification" content="7h9JE9mcd6xrVM9nE_7tw1iAvgvUM8hjZfbZp2hzZbE" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="SEVEN STARS - Academie de Fotbal pentru Copii. Rezultate meciuri, program viitor și materiale video.">
-<title>SEVEN STARS - Academie de Fotbal pentru Copii</title>
+<meta name="description" content="SEVEN Stars - Academie de Fotbal pentru Copii. Rezultate meciuri, program viitor și materiale video.">
+<title>SEVEN Stars - Academie de Fotbal pentru Copii</title>
 
 <style>
 
@@ -185,6 +185,65 @@ footer {
     }
 }
 
+.countdown-section {
+    background: #000000;
+    color: #FFD700;
+    text-align: center;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.countdown-section h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    color: #cccccc;
+    font-weight: normal;
+}
+
+.countdown-match {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.countdown-box {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 10px 15px;
+    min-width: 70px;
+}
+
+.countdown-number {
+    font-size: 32px;
+    font-weight: bold;
+    display: block;
+}
+
+.countdown-label {
+    font-size: 12px;
+    color: #cccccc;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    .countdown-box {
+        min-width: 55px;
+        padding: 8px 10px;
+    }
+    .countdown-number {
+        font-size: 24px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -195,10 +254,64 @@ footer {
         <img src="logo.png.png" alt="SEVEN Stars Logo">
     </div>
 
-    <h1>SEVEN STARS</h1>
+    <h1>SEVEN Stars</h1>
     <p>Academie de Fotbal pentru Copii</p>
 
 </header>
+
+<div class="countdown-section">
+    <h3>Următorul meci</h3>
+    <div class="countdown-match" id="countdown-match-name">Seven Star Jr - Alex V 1</div>
+    <div class="countdown-timer">
+        <div class="countdown-box">
+            <span class="countdown-number" id="countdown-days">00</span>
+            <span class="countdown-label">Zile</span>
+        </div>
+        <div class="countdown-box">
+            <span class="countdown-number" id="countdown-hours">00</span>
+            <span class="countdown-label">Ore</span>
+        </div>
+        <div class="countdown-box">
+            <span class="countdown-number" id="countdown-minutes">00</span>
+            <span class="countdown-label">Minute</span>
+        </div>
+        <div class="countdown-box">
+            <span class="countdown-number" id="countdown-seconds">00</span>
+            <span class="countdown-label">Secunde</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    var targetDate = new Date("2026-09-19T08:30:00");
+
+    function updateCountdown() {
+        var now = new Date();
+        var diff = targetDate - now;
+
+        if (diff <= 0) {
+            document.getElementById("countdown-match-name").textContent = "Meciul a început!";
+            document.getElementById("countdown-days").textContent = "00";
+            document.getElementById("countdown-hours").textContent = "00";
+            document.getElementById("countdown-minutes").textContent = "00";
+            document.getElementById("countdown-seconds").textContent = "00";
+            return;
+        }
+
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("countdown-days").textContent = String(days).padStart(2, "0");
+        document.getElementById("countdown-hours").textContent = String(hours).padStart(2, "0");
+        document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
+        document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+</script>
 
 <section>
 
