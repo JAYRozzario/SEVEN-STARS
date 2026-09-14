@@ -116,10 +116,46 @@ footer {
         font-size: 30px;
     }
 
-    table {
+    section {
+        margin: 10px;
+        padding: 12px;
+    }
+
+    table, thead, tbody, th, td, tr {
         display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    }
+
+    table tr:first-child {
+        display: none;
+    }
+
+    table tr {
+        background: #ffffff;
+        border: 1px solid #dddddd;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        padding: 8px;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    table td {
+        border-bottom: 1px solid #eeeeee;
+        padding: 8px 6px;
+        white-space: normal;
+    }
+
+    table td:last-child {
+        border-bottom: none;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        font-weight: bold;
+        color: #888888;
+        text-transform: uppercase;
+        margin-bottom: 2px;
     }
 }
 
@@ -153,12 +189,12 @@ footer {
             <th>Video</th>
         </tr>
 <tr>
-            <td>12.09.2026</td>
-            <td>09:30</td>
-            <td>Seven Stars Jr - AC Galactik</td>
-            <td>8-6</td>
-            <td class="win">Victorie</td>
-            <td>
+            <td data-label="Data">12.09.2026</td>
+            <td data-label="Ora">09:30</td>
+            <td data-label="Meci">Seven Stars Jr - AC Galactik</td>
+            <td data-label="Scor">8-6</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="Video">
                 <a href="https://www.youtube.com/watch?v=WvBzpnIh_Rc"
 target="_blank"
 class="youtube-btn">
@@ -170,12 +206,12 @@ class="youtube-btn">
 
 
         <tr>
-            <td>05.09.2026</td>
-            <td>15:30</td>
-            <td>Seven Stars Jr - Sporting Kids 1</td>
-            <td>1-6</td>
-            <td class="loss">Înfrângere</td>
-            <td>
+            <td data-label="Data">05.09.2026</td>
+            <td data-label="Ora">15:30</td>
+            <td data-label="Meci">Seven Stars Jr - Sporting Kids 1</td>
+            <td data-label="Scor">1-6</td>
+            <td data-label="Status" class="loss">Înfrângere</td>
+            <td data-label="Video">
                 <a href="https://www.youtube.com/watch?v=DP89CKNGjfA"
 target="_blank"
 class="youtube-btn">
@@ -185,12 +221,12 @@ class="youtube-btn">
         </tr>
 
         <tr>
-            <td>05.09.2026</td>
-            <td>16:30</td>
-            <td>Seven Stars Jr 2 - Sporting Kids 2</td>
-            <td>1-1</td>
-            <td class="draw">Egal</td>
-            <td>
+            <td data-label="Data">05.09.2026</td>
+            <td data-label="Ora">16:30</td>
+            <td data-label="Meci">Seven Stars Jr 2 - Sporting Kids 2</td>
+            <td data-label="Scor">1-1</td>
+            <td data-label="Status" class="draw">Egal</td>
+            <td data-label="Video">
                 <a href="https://www.youtube.com/watch?v=WfR7SLeune4"
 target="_blank"
 class="youtube-btn">
@@ -217,84 +253,101 @@ class="youtube-btn">
         </tr>
 
         <tr>
-            <td>19.09.2026</td>
-            <td>08:30</td>
-            <td>Seven Star Jr - Alex V 1</td>
+            <td data-label="Data">19.09.2026</td>
+            <td data-label="Ora">08:30</td>
+            <td data-label="Meci">Seven Star Jr - Alex V 1</td>
         </tr>
 
         <tr>
-            <td>26.09.2026</td>
-            <td>12:40</td>
-            <td>Luc Buc - Seven Star Jr </td>
+            <td data-label="Data">26.09.2026</td>
+            <td data-label="Ora">12:40</td>
+            <td data-label="Meci">Luc Buc - Seven Star Jr </td>
         </tr>
 
         <tr>
-            <td>3.10.2026</td>
-            <td>12:40</td>
-            <td>Seven Star Jr - Arsenal Sp 1</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>10.10.2026</td>
-            <td>13:30</td>
-            <td>Seven Star Jr - Alex V 2</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>17.10.2026</td>
-            <td>10:10</td>
-            <td>Partizan 1 - Seven Star Jr</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>24.10.2026</td>
-            <td>11:50</td>
-            <td>Seven Star Jr - Sporting Kids 2</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>31.10.2026</td>
-            <td>13:30</td>
-            <td>Super Star Junior 2 - Seven Star Jr</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>7.11.2026</td>
-            <td>12:40</td>
-            <td>Seven Star Jr - Partizan 2</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>14.11.2026</td>
-            <td>14:20</td>
-            <td>Intergalaxy - Seven Star Jr</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>21.11.2026</td>
-            <td>10:10</td>
-            <td>Seven Star Jr - Seven Star 1</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>28.11.2026</td>
-            <td>9:20</td>
-            <td>Marius Lacatus - Seven Star Jr</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>5.12.2026</td>
-            <td>14:20</td>
-            <td>Seven Star Jr - FC Juniorul</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
         <tr>
-            <td>12.12.2026</td>
-            <td>13:30</td>
-            <td>Arsenal Sp 2 - Seven Star Jr</td>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
         </tr>
 
-        
+        <tr>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">?</td>
+            <td data-label="Ora">?</td>
+            <td data-label="Meci">?</td>
+        </tr>
+
     </table>
 
 </section>
