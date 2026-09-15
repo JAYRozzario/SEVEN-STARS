@@ -9,10 +9,127 @@
 
 <style>
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     background: #f4f4f4;
+    display: flex;
+}
+
+.side-nav {
+    width: 200px;
+    flex-shrink: 0;
+    background: #ffffff;
+    min-height: 100vh;
+    padding: 20px 15px;
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    border-right: 1px solid #eeeeee;
+}
+
+.side-nav-title {
+    color: #cc0000;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 1px;
+    margin: 0 0 15px 5px;
+}
+
+.side-nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #000000;
+    text-decoration: none;
+    padding: 12px 16px;
+    font-weight: bold;
+    font-size: 14px;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    transition: background 0.2s;
+}
+
+.side-nav a .nav-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #FFD700;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.side-nav a:hover {
+    background: #fffbe6;
+    border-color: #FFD700;
+}
+
+.side-nav a.active {
+    background: #FFD700;
+    border-color: #FFD700;
+    color: #000000;
+}
+
+.toggle-section {
+    display: none;
+}
+
+.toggle-section.open {
+    display: block;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .side-nav {
+        width: 100%;
+        min-height: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-right: none;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    .side-nav-title {
+        display: none;
+    }
+
+    .side-nav a {
+        flex: 1;
+        justify-content: center;
+        padding: 8px 10px;
+        font-size: 12px;
+        margin-bottom: 0;
+    }
+
+    .side-nav a .nav-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 11px;
+    }
 }
 
 header {
@@ -334,13 +451,22 @@ footer {
 </head>
 <body>
 
+<nav class="side-nav">
+    <div class="side-nav-title">MENIU</div>
+    <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
+    <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Ultimele Rezultate</a>
+    <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
+</nav>
+
+<div class="main-content">
+
 <header>
 
     <div class="logo">
         <img src="logo.png.png" alt="SEVEN Stars Logo">
     </div>
 
-    <h1>SEVEN Stars</h1>
+    <h1>SEVEN STARS</h1>
     <p>Academie de Fotbal pentru Copii</p>
 
 </header>
@@ -349,7 +475,7 @@ footer {
 
     <div class="countdown-section">
         <h3>Următorul meci</h3>
-        <div class="countdown-match" id="countdown-match-name">Seven Star Jr - Alex V 1</div>
+        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V 1</div>
         <div class="countdown-timer">
             <div class="countdown-box">
                 <span class="countdown-number" id="countdown-days">00</span>
@@ -384,7 +510,7 @@ footer {
                     <polygon points="38,37 42,52 30,64 16,56 26,32" fill="#000000" stroke="#FFD700" stroke-width="2"/>
                     <polygon points="42,52 58,52 62,68 50,78 38,68" fill="#000000" stroke="#FFD700" stroke-width="2"/>
                 </svg>
-                <div class="match-banner-name" id="banner-team-home">Seven Star Jr</div>
+                <div class="match-banner-name" id="banner-team-home">Seven Stars</div>
             </div>
 
             <div class="match-banner-vs">VS</div>
@@ -437,9 +563,39 @@ footer {
 
     updateCountdown();
     setInterval(updateCountdown, 1000);
+
+    function goHome() {
+        document.querySelectorAll(".toggle-section").forEach(function(s) {
+            s.classList.remove("open");
+        });
+        document.querySelectorAll(".side-nav a").forEach(function(a) {
+            a.classList.remove("active");
+        });
+        document.getElementById("nav-home").classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleSection(id) {
+        var section = document.getElementById(id);
+        var navBtn = document.getElementById("nav-" + id);
+        var isOpen = section.classList.contains("open");
+
+        document.querySelectorAll(".toggle-section").forEach(function(s) {
+            s.classList.remove("open");
+        });
+        document.querySelectorAll(".side-nav a").forEach(function(a) {
+            a.classList.remove("active");
+        });
+
+        if (!isOpen) {
+            section.classList.add("open");
+            navBtn.classList.add("active");
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+    }
 </script>
 
-<section>
+<section id="rezultate" class="toggle-section">
 
     <h2>Ultimele Rezultate</h2>
 
@@ -456,7 +612,7 @@ footer {
 <tr>
             <td data-label="Data">12.09.2026</td>
             <td data-label="Ora">09:30</td>
-            <td data-label="Meci">Seven Stars Jr - Galactik</td>
+            <td data-label="Meci">Seven Stars - Galactik</td>
             <td data-label="Scor">8-6</td>
             <td data-label="Status" class="win">Victorie</td>
             <td data-label="LINK MECI">
@@ -473,7 +629,7 @@ class="youtube-btn">
         <tr>
             <td data-label="Data">05.09.2026</td>
             <td data-label="Ora">15:30</td>
-            <td data-label="Meci">Seven Stars Jr - Sporting Kids 1</td>
+            <td data-label="Meci">Seven Stars - Sporting Kids 1</td>
             <td data-label="Scor">1-6</td>
             <td data-label="Status" class="loss">Înfrângere</td>
             <td data-label="LINK MECI">
@@ -488,7 +644,7 @@ class="youtube-btn">
         <tr>
             <td data-label="Data">05.09.2026</td>
             <td data-label="Ora">16:30</td>
-            <td data-label="Meci">Seven Stars Jr 2 - Sporting Kids 2</td>
+            <td data-label="Meci">Seven Stars 2 - Sporting Kids 2</td>
             <td data-label="Scor">1-1</td>
             <td data-label="Status" class="draw">Egal</td>
             <td data-label="LINK MECI">
@@ -505,7 +661,7 @@ class="youtube-btn">
 
 </section>
 
-<section>
+<section id="viitoare" class="toggle-section">
 
     <h2>Meciuri Viitoare</h2>
 
@@ -520,79 +676,79 @@ class="youtube-btn">
         <tr>
             <td data-label="Data">19.09.2026</td>
             <td data-label="Ora">08:30</td>
-            <td data-label="Meci">Seven Star Jr - Alex V 1</td>
+            <td data-label="Meci">Seven Stars - Alex V 1</td>
         </tr>
 
         <tr>
             <td data-label="Data">26.09.2026</td>
             <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Luc Buc - Seven Star Jr </td>
+            <td data-label="Meci">Luc Buc - Seven Stars </td>
         </tr>
 
                 <tr>
             <td data-label="Data">3.10.2026</td>
             <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Seven Star Jr - Arsenal Sp 1</td>
+            <td data-label="Meci">Seven Stars - Arsenal Sp 1</td>
         </tr>
 
         <tr>
             <td data-label="Data">10.10.2026</td>
             <td data-label="Ora">13:30</td>
-            <td data-label="Meci">Seven Star Jr - Alex V 2</td>
+            <td data-label="Meci">Seven Stars - Alex V 2</td>
         </tr>
 
         <tr>
             <td data-label="Data">17.10.2026</td>
             <td data-label="Ora">10:10</td>
-            <td data-label="Meci">Partizan 1 - Seven Star Jr</td>
+            <td data-label="Meci">Partizan 1 - Seven Stars</td>
         </tr>
 
         <tr>
             <td data-label="Data">24.10.2026</td>
             <td data-label="Ora">11:50</td>
-            <td data-label="Meci">Seven Star Jr - Sporting Kids 2</td>
+            <td data-label="Meci">Seven Stars - Sporting Kids 2</td>
         </tr>
 
         <tr>
             <td data-label="Data">31.10.2026</td>
             <td data-label="Ora">13:30</td>
-            <td data-label="Meci">Super Star Junior 2 - Seven Star Jr</td>
+            <td data-label="Meci">Super Star Junior 2 - Seven Stars</td>
         </tr>
 
         <tr>
             <td data-label="Data">7.11.2026</td>
             <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Seven Star Jr - Partizan 2</td>
+            <td data-label="Meci">Seven Stars - Partizan 2</td>
         </tr>
 
         <tr>
             <td data-label="Data">14.11.2026</td>
             <td data-label="Ora">14:20</td>
-            <td data-label="Meci">Intergalaxy - Seven Star Jr</td>
+            <td data-label="Meci">Intergalaxy - Seven Stars</td>
         </tr>
 
         <tr>
             <td data-label="Data">21.11.2026</td>
             <td data-label="Ora">10:10</td>
-            <td data-label="Meci">Seven Star Jr - Seven Star 1</td>
+            <td data-label="Meci">Seven Stars - Seven Star 1</td>
         </tr>
 
         <tr>
             <td data-label="Data">28.11.2026</td>
             <td data-label="Ora">9:20</td>
-            <td data-label="Meci">Marius Lacatus - Seven Star Jr</td>
+            <td data-label="Meci">Marius Lacatus - Seven Stars</td>
         </tr>
 
         <tr>
             <td data-label="Data">5.12.2026</td>
             <td data-label="Ora">14:20</td>
-            <td data-label="Meci">Seven Star Jr - FC Juniorul</td>
+            <td data-label="Meci">Seven Stars - FC Juniorul</td>
         </tr>
 
         <tr>
             <td data-label="Data">12.12.2026</td>
             <td data-label="Ora">13:30</td>
-            <td data-label="Meci">Arsenal Sp 2 - Seven Star Jr</td>
+            <td data-label="Meci">Arsenal Sp 2 - Seven Stars</td>
         </tr>
         
     </table>
@@ -602,6 +758,8 @@ class="youtube-btn">
 <footer>
     © 2026 SEVEN Stars
 </footer>
+
+</div>
 
 </body>
 </html>
