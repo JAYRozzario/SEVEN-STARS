@@ -216,6 +216,13 @@ body {
         z-index: 10;
         border-right: none;
         border-bottom: 1px solid #eeeeee;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .side-nav::-webkit-scrollbar {
+        display: none;
     }
 
     .side-nav-title {
@@ -223,11 +230,12 @@ body {
     }
 
     .side-nav a {
-        flex: 1;
+        flex: 0 0 auto;
         justify-content: center;
-        padding: 8px 10px;
+        padding: 8px 14px;
         font-size: 12px;
         margin-bottom: 0;
+        white-space: nowrap;
     }
 
     .side-nav a .nav-icon {
