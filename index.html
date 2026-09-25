@@ -18,55 +18,62 @@ body {
     margin: 0;
     background: #f4f4f4;
     display: flex;
+    flex-direction: column;
 }
 
 .side-nav {
-    width: 200px;
+    width: 100%;
     flex-shrink: 0;
     background: #ffffff;
-    min-height: 100vh;
-    padding: 20px 15px;
+    padding: 12px 16px;
     box-sizing: border-box;
     position: sticky;
     top: 0;
-    align-self: flex-start;
-    border-right: 1px solid #eeeeee;
+    z-index: 10;
+    border-bottom: 1px solid #eeeeee;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.side-nav::-webkit-scrollbar {
+    display: none;
 }
 
 .side-nav-title {
-    color: #cc0000;
-    font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 1px;
-    margin: 0 0 15px 5px;
+    display: none;
 }
 
 .side-nav a {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     color: #000000;
     text-decoration: none;
-    padding: 12px 16px;
+    padding: 10px 16px;
     font-weight: bold;
     font-size: 14px;
     background: #ffffff;
     border: 1px solid #eeeeee;
     border-radius: 30px;
-    margin-bottom: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     transition: background 0.2s;
+    flex: 0 0 auto;
+    white-space: nowrap;
 }
 
 .side-nav a .nav-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: #FFD700;
-    font-size: 14px;
+    font-size: 13px;
     flex-shrink: 0;
 }
 
@@ -200,42 +207,9 @@ body {
 }
 
 @media (max-width: 768px) {
-    body {
-        flex-direction: column;
-    }
-
-    .side-nav {
-        width: 100%;
-        min-height: auto;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px;
-        position: sticky;
-        top: 0;
-        z-index: 10;
-        border-right: none;
-        border-bottom: 1px solid #eeeeee;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .side-nav::-webkit-scrollbar {
-        display: none;
-    }
-
-    .side-nav-title {
-        display: none;
-    }
-
     .side-nav a {
-        flex: 0 0 auto;
-        justify-content: center;
         padding: 8px 14px;
         font-size: 12px;
-        margin-bottom: 0;
-        white-space: nowrap;
     }
 
     .side-nav a .nav-icon {
@@ -376,42 +350,58 @@ footer {
         margin: 10px;
         padding: 12px;
     }
+}
 
-    table, thead, tbody, th, td, tr {
-        display: block;
-    }
+table, thead, tbody, th, td, tr {
+    display: block;
+}
 
-    table tr:first-child {
-        display: none;
+table {
+    width: 100%;
+}
+
+table tr:first-child {
+    display: none;
+}
+
+table tr {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+table td {
+    border-bottom: 1px solid #eeeeee;
+    padding: 8px 6px;
+    white-space: normal;
+}
+
+table td:last-child {
+    border-bottom: none;
+}
+
+table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #888888;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+@media (min-width: 769px) {
+    table {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 14px;
     }
 
     table tr {
-        background: #ffffff;
-        border: 1px solid #dddddd;
-        border-radius: 10px;
-        margin-bottom: 12px;
-        padding: 8px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-
-    table td {
-        border-bottom: 1px solid #eeeeee;
-        padding: 8px 6px;
-        white-space: normal;
-    }
-
-    table td:last-child {
-        border-bottom: none;
-    }
-
-    table td::before {
-        content: attr(data-label);
-        display: block;
-        font-size: 12px;
-        font-weight: bold;
-        color: #888888;
-        text-transform: uppercase;
-        margin-bottom: 2px;
+        margin-bottom: 0;
     }
 }
 
@@ -590,7 +580,7 @@ footer {
 
     <div class="countdown-section">
         <h3>Următorul meci</h3>
-        <div class="countdown-match" id="countdown-match-name">Luc Buc - Seven Stars</div>
+        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V 1</div>
         <div class="countdown-timer">
             <div class="countdown-box">
                 <span class="countdown-number" id="countdown-days">00</span>
@@ -656,17 +646,17 @@ footer {
                     <path d="M64 26 L76 32 Q78 34 77 37 L72 46 Q71 48 69 47 L64 44 L64 78 Q50 83 36 78 L36 44 L31 47 Q29 48 28 46 L23 37 Q22 34 24 32 L36 26 Q37 25 39 26 Q44 31 50 31 Q56 31 61 26 Q63 25 64 26 Z" fill="none" stroke="#6b0000" stroke-width="1"/>
                     <path d="M40 27 Q45 33 50 33 Q55 33 60 27" fill="none" stroke="#cc0000" stroke-width="2"/>
                 </svg>
-                <div class="match-banner-name" id="banner-team-away">Luc Buc</div>
+                <div class="match-banner-name" id="banner-team-away">Alex V 1</div>
             </div>
 
         </div>
-        <div class="match-banner-date" id="banner-match-date">26.09.2026 &bull; 12:40</div>
+        <div class="match-banner-date" id="banner-match-date">19.09.2026 &bull; 14:20</div>
     </div>
 
 </div>
 
 <script>
-    var targetDate = new Date("2026-09-26T12:40:00");
+    var targetDate = new Date("2026-09-19T14:20:00");
 
     function updateCountdown() {
         var now = new Date();
@@ -777,21 +767,10 @@ footer {
 <tr>
             <td data-label="Data">19.09.2026</td>
             <td data-label="Ora">14:20</td>
-            <td data-label="Meci">Seven Stars - Partizan 1</td>
-            <td data-label="Scor">4-1</td>
-            <td data-label="Status" class="win">Victorie</td>
-            <td data-label="LINK MECI">
-                <a href="https://youtu.be/EX8m5_c36RI"
-target="_blank"
-class="youtube-btn">
-▶ Repriza 1
-</a>
-                <a href="https://youtu.be/Sjx14o1allw"
-target="_blank"
-class="youtube-btn">
-▶ Repriza 2
-</a>
-            </td>
+            <td data-label="Meci">Seven Stars - Alex V 1</td>
+            <td data-label="Scor">? - ?</td>
+            <td data-label="Status" class="pending">În așteptare</td>
+            <td data-label="LINK MECI">-</td>
         </tr>
 
 <tr>
@@ -856,6 +835,12 @@ class="youtube-btn">
             <th>Data</th>
             <th>Ora</th>
             <th>Meci</th>
+        </tr>
+
+        <tr>
+            <td data-label="Data">19.09.2026</td>
+            <td data-label="Ora">14:20</td>
+            <td data-label="Meci">Seven Stars - Alex V 1</td>
         </tr>
 
         <tr>
@@ -953,14 +938,6 @@ class="youtube-btn">
         <img src="poza12.jpeg" alt="Poza 12" onclick="openLightbox(this)">
         <img src="poza13.jpeg" alt="Poza 13" onclick="openLightbox(this)">
         <img src="poza14.jpeg" alt="Poza 14" onclick="openLightbox(this)">
-        <img src="poza15.jpeg.jpeg" alt="Poza 15" onclick="openLightbox(this)">
-        <img src="Image16.jpeg" alt="Poza 16" onclick="openLightbox(this)">
-        <img src="Image17.jpeg" alt="Poza 17" onclick="openLightbox(this)">
-        <img src="poza18.jpeg" alt="Poza 18" onclick="openLightbox(this)">
-        <img src="poza20.jpeg" alt="Poza 20" onclick="openLightbox(this)">
-        <img src="poza21.jpeg" alt="Poza 21" onclick="openLightbox(this)">
-        <img src="poza22.jpeg" alt="Poza 22" onclick="openLightbox(this)">
-        <img src="poza23.jpeg" alt="Poza 23" onclick="openLightbox(this)">
     </div>
 
 </section>
