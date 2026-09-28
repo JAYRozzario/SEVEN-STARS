@@ -262,7 +262,8 @@ header {
     overflow: hidden;
 }
 
-.header-slides {
+.header-slides,
+.card-slides {
     position: absolute;
     top: 0;
     left: 0;
@@ -318,7 +319,8 @@ header {
     background-size: cover;
 }
 
-.header-overlay {
+.header-overlay,
+.card-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -327,6 +329,10 @@ header {
     background: rgba(0, 0, 0, 0.7);
     z-index: 1;
     pointer-events: none;
+}
+
+.card-overlay {
+    background: rgba(0, 0, 0, 0.75);
 }
 
 header h1,
@@ -507,6 +513,8 @@ footer {
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
 }
 
 .match-banner {
@@ -521,6 +529,14 @@ footer {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.countdown-section > *:not(.card-slides):not(.card-overlay),
+.match-banner > *:not(.card-slides):not(.card-overlay) {
+    position: relative;
+    z-index: 2;
 }
 
 .match-banner-label {
@@ -667,6 +683,8 @@ footer {
 <div class="hero-row">
 
     <div class="countdown-section">
+        <div class="card-slides" id="countdown-slides"></div>
+        <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
         <div class="countdown-match" id="countdown-match-name">Seven Stars - Arsenal Sp 1</div>
         <div class="countdown-timer">
@@ -690,6 +708,8 @@ footer {
     </div>
 
     <div class="match-banner">
+        <div class="card-slides" id="banner-slides"></div>
+        <div class="card-overlay"></div>
         <div class="match-banner-label">Meciul viitor</div>
         <div class="match-banner-teams">
 
@@ -1067,8 +1087,12 @@ class="youtube-btn">
 
 <script>
 (function() {
-    var header = document.querySelector("header");
-    var container = document.getElementById("header-slides");
+    var containers = [
+        document.getElementById("header-slides"),
+        document.getElementById("countdown-slides"),
+        document.getElementById("banner-slides")
+    ].filter(function(c) { return c; });
+
     var sources = Array.prototype.map.call(
         document.querySelectorAll(".gallery-grid img"),
         function(img) { return img.getAttribute("src"); }
@@ -1080,12 +1104,14 @@ class="youtube-btn">
     var INTERVAL_MS = 2000;
 
     function updateMode(slide) {
-        var headerRatio = header.clientWidth / header.clientHeight;
+        var host = slide.parentNode;
+        if (!host || !host.clientHeight) return;
+        var hostRatio = host.clientWidth / host.clientHeight;
         var imgRatio = parseFloat(slide.getAttribute("data-ratio"));
-        slide.classList.toggle("cover", imgRatio >= 0.45 * headerRatio);
+        slide.classList.toggle("cover", imgRatio >= 0.45 * hostRatio);
     }
 
-    function createSlide(src, ratio) {
+    function createSlideIn(container, src, ratio) {
         var slide = document.createElement("div");
         slide.className = "header-slide";
         slide.setAttribute("data-ratio", ratio);
@@ -1110,19 +1136,26 @@ class="youtube-btn">
             var idx = (current + step) % total;
             if (slides[idx]) {
                 if (current >= 0 && slides[current]) {
-                    slides[current].classList.remove("active");
+                    slides[current].forEach(function(s) { s.classList.remove("active"); });
                 }
-                slides[idx].classList.add("active");
+                slides[idx].forEach(function(s) { s.classList.add("active"); });
                 current = idx;
                 return;
             }
         }
     }
 
+    function refreshModes() {
+        slides.forEach(function(group) {
+            if (group) group.forEach(function(s) { updateMode(s); });
+        });
+    }
+
     sources.forEach(function(src, i) {
         var im = new Image();
         im.onload = function() {
-            slides[i] = createSlide(src, im.naturalWidth / im.naturalHeight);
+            var ratio = im.naturalWidth / im.naturalHeight;
+            slides[i] = containers.map(function(c) { return createSlideIn(c, src, ratio); });
             if (!started) {
                 started = true;
                 showNext();
@@ -1132,9 +1165,8 @@ class="youtube-btn">
         im.src = src;
     });
 
-    window.addEventListener("resize", function() {
-        slides.forEach(function(s) { if (s) updateMode(s); });
-    });
+    window.addEventListener("resize", refreshModes);
+    window.addEventListener("load", refreshModes);
 })();
 </script>
 
