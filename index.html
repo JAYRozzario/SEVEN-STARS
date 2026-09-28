@@ -246,7 +246,7 @@ body {
 }
 
 header {
-    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('echipa.jpeg');
+    background-image: url('echipa.jpeg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -259,12 +259,87 @@ header {
     justify-content: flex-end;
     box-sizing: border-box;
     position: relative;
+    overflow: hidden;
+}
+
+.header-slides {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.header-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.8s ease-in-out, visibility 0s linear 0.8s;
+}
+
+.header-slide.active {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.8s ease-in-out, visibility 0s linear 0s;
+}
+
+.slide-bg {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(18px);
+}
+
+.slide-fg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.header-slide.cover .slide-bg {
+    display: none;
+}
+
+.header-slide.cover .slide-fg {
+    background-size: cover;
+}
+
+.header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    pointer-events: none;
+}
+
+header h1,
+header p {
+    position: relative;
+    z-index: 2;
 }
 
 .logo {
     position: absolute;
     top: 15px;
     right: 20px;
+    z-index: 2;
 }
 
 .logo img {
@@ -576,6 +651,9 @@ footer {
 <div class="main-content">
 
 <header>
+
+    <div class="header-slides" id="header-slides"></div>
+    <div class="header-overlay"></div>
 
     <div class="logo">
         <img src="logo.png.png" alt="SEVEN Stars Logo">
@@ -986,6 +1064,79 @@ class="youtube-btn">
 </footer>
 
 </div>
+
+<script>
+(function() {
+    var header = document.querySelector("header");
+    var container = document.getElementById("header-slides");
+    var sources = Array.prototype.map.call(
+        document.querySelectorAll(".gallery-grid img"),
+        function(img) { return img.getAttribute("src"); }
+    );
+    var total = sources.length;
+    var slides = new Array(total);
+    var current = -1;
+    var started = false;
+    var INTERVAL_MS = 2000;
+
+    function updateMode(slide) {
+        var headerRatio = header.clientWidth / header.clientHeight;
+        var imgRatio = parseFloat(slide.getAttribute("data-ratio"));
+        slide.classList.toggle("cover", imgRatio >= 0.45 * headerRatio);
+    }
+
+    function createSlide(src, ratio) {
+        var slide = document.createElement("div");
+        slide.className = "header-slide";
+        slide.setAttribute("data-ratio", ratio);
+
+        var bg = document.createElement("div");
+        bg.className = "slide-bg";
+        bg.style.backgroundImage = 'url("' + src + '")';
+
+        var fg = document.createElement("div");
+        fg.className = "slide-fg";
+        fg.style.backgroundImage = 'url("' + src + '")';
+
+        slide.appendChild(bg);
+        slide.appendChild(fg);
+        container.appendChild(slide);
+        updateMode(slide);
+        return slide;
+    }
+
+    function showNext() {
+        for (var step = 1; step <= total; step++) {
+            var idx = (current + step) % total;
+            if (slides[idx]) {
+                if (current >= 0 && slides[current]) {
+                    slides[current].classList.remove("active");
+                }
+                slides[idx].classList.add("active");
+                current = idx;
+                return;
+            }
+        }
+    }
+
+    sources.forEach(function(src, i) {
+        var im = new Image();
+        im.onload = function() {
+            slides[i] = createSlide(src, im.naturalWidth / im.naturalHeight);
+            if (!started) {
+                started = true;
+                showNext();
+                setInterval(showNext, INTERVAL_MS);
+            }
+        };
+        im.src = src;
+    });
+
+    window.addEventListener("resize", function() {
+        slides.forEach(function(s) { if (s) updateMode(s); });
+    });
+})();
+</script>
 
 </body>
 </html>
