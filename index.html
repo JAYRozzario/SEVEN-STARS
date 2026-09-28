@@ -108,6 +108,29 @@ body {
     }
 }
 
+@media (max-width: 768px) {
+    #viitoare table tr {
+        position: relative;
+    }
+
+    #viitoare table td {
+        padding-right: 92px;
+    }
+
+    #viitoare table tr::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 14px;
+        width: 70px;
+        height: 70px;
+        transform: translateY(-50%);
+        background: url('logo.png.png') center / cover no-repeat;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+}
+
 .toggle-section.open {
     display: block;
 }
