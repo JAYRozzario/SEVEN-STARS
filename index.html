@@ -472,6 +472,22 @@ th, td {
     background: #cc0000;
 }
 
+.team-crest {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    vertical-align: -5px;
+    margin: 0 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.meci-value {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 footer {
     background: #000000;
     color: #FFD700;
@@ -872,6 +888,57 @@ footer {
         if (e.key === "ArrowLeft") prevImage();
         if (e.key === "Escape") closeLightbox();
     });
+
+    // Baza cu stemele echipelor: nume EXACT (cum apare in tabel) -> fisier poza
+    // Adauga aici o linie noua de fiecare data cand incarci o stema noua pe GitHub.
+    var TEAM_CRESTS = {
+        "Seven Stars": "Seven Stars.png",
+        "Seven Star 1": "Seven Stars.png",
+        "Alex V": "Alex V.png",
+        "Arsenal Sp": "Arsenal Sp.png",
+        "FC Juniorul": "FC Juniorul.png",
+        "Galactik": "Galactik.png",
+        "Intergalaxy": "Intergalaxy.png",
+        "Luc Buc": "Luc Buc.png",
+        "Marius Lacatus": "Marius Lacatus.png",
+        "Partizan": "Partizan.png",
+        "Sporting Kids": "Sporting Kids.png",
+        "Super Star Junior": "Superstar Junior.png"
+    };
+
+    // Cauta intai potrivire exacta; daca nu gaseste, cauta un nume din baza
+    // care e "inceputul" numelui din tabel (ex: "Partizan" gaseste "Partizan 1", "Partizan 2").
+    function crestImg(name) {
+        name = name.trim();
+        var file = TEAM_CRESTS[name];
+        if (!file) {
+            for (var key in TEAM_CRESTS) {
+                if (name.indexOf(key) === 0 && (name.length === key.length || name.charAt(key.length) === " ")) {
+                    file = TEAM_CRESTS[key];
+                    break;
+                }
+            }
+        }
+        return file ? '<img class="team-crest" src="' + file + '" alt="' + name + '">' : "";
+    }
+
+    function attachCrests() {
+        document.querySelectorAll('td[data-label="Meci"]').forEach(function(cell) {
+            if (cell.dataset.crestsDone) return;
+            var text = cell.textContent.trim();
+            var parts = text.split(/\s-\s/);
+            if (parts.length === 2) {
+                cell.innerHTML = '<span class="meci-value">' +
+                    crestImg(parts[0]) +
+                    '<span>' + parts[0].trim() + ' - ' + parts[1].trim() + '</span>' +
+                    crestImg(parts[1]) +
+                    '</span>';
+                cell.dataset.crestsDone = "1";
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", attachCrests);
 
     function goHome() {
         document.querySelectorAll(".toggle-section").forEach(function(s) {
