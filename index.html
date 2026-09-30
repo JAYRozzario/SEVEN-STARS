@@ -621,6 +621,15 @@ footer {
     height: 90px;
 }
 
+.banner-crest {
+    border-radius: 50%;
+    background: #ffffff;
+    padding: 6px;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 3px #FFD700;
+    object-fit: contain;
+}
+
 .match-banner-vs {
     font-size: 22px;
     font-weight: bold;
@@ -908,7 +917,7 @@ footer {
 
     // Cauta intai potrivire exacta; daca nu gaseste, cauta un nume din baza
     // care e "inceputul" numelui din tabel (ex: "Partizan" gaseste "Partizan 1", "Partizan 2").
-    function crestImg(name) {
+    function crestFile(name) {
         name = name.trim();
         var file = TEAM_CRESTS[name];
         if (!file) {
@@ -919,7 +928,32 @@ footer {
                 }
             }
         }
-        return file ? '<img class="team-crest" src="' + file + '" alt="' + name + '">' : "";
+        return file;
+    }
+
+    function crestImg(name) {
+        var file = crestFile(name);
+        return file ? '<img class="team-crest" src="' + file + '" alt="' + name.trim() + '">' : "";
+    }
+
+    // Pune stema reala (daca exista in TEAM_CRESTS) in locul tricoului
+    // desenat, in bannerul "Meciul viitor". Daca echipa nu are stema
+    // incarcata inca, tricoul colorat ramane neschimbat.
+    function attachBannerCrests() {
+        ["home", "away"].forEach(function(side) {
+            var nameEl = document.getElementById("banner-team-" + side);
+            if (!nameEl) return;
+            var file = crestFile(nameEl.textContent);
+            if (!file) return;
+            var svg = nameEl.previousElementSibling;
+            if (svg && svg.tagName && svg.tagName.toLowerCase() === "svg") {
+                var img = document.createElement("img");
+                img.src = file;
+                img.alt = nameEl.textContent.trim();
+                img.className = "player-silhouette banner-crest";
+                svg.parentNode.replaceChild(img, svg);
+            }
+        });
     }
 
     function attachCrests() {
@@ -938,7 +972,10 @@ footer {
         });
     }
 
-    document.addEventListener("DOMContentLoaded", attachCrests);
+    document.addEventListener("DOMContentLoaded", function() {
+        attachCrests();
+        attachBannerCrests();
+    });
 
     function goHome() {
         document.querySelectorAll(".toggle-section").forEach(function(s) {
