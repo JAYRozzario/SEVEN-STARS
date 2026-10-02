@@ -1005,7 +1005,7 @@ footer {
                 cell.innerHTML = '<span class="meci-value">' +
                     '<span class="meci-team">' + crestImg(parts[0]) + '<span>' + parts[0].trim() + '</span></span>' +
                     '<span class="meci-sep">-</span>' +
-                    '<span class="meci-team">' + crestImg(parts[1]) + '<span>' + parts[1].trim() + '</span></span>' +
+                    '<span class="meci-team"><span>' + parts[1].trim() + '</span>' + crestImg(parts[1]) + '</span>' +
                     '</span>';
                 cell.dataset.crestsDone = "1";
             }
