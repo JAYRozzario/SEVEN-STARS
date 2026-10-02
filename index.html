@@ -34,11 +34,13 @@ body {
 }
 
 .side-nav-title {
-    color: #cc0000;
-    font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 1px;
-    margin: 0 0 15px 5px;
+    text-align: center;
+    margin: 0 0 15px;
+}
+
+.side-nav-title img {
+    width: 70px;
+    height: auto;
 }
 
 .side-nav a {
@@ -450,19 +452,31 @@ th, td {
 }
 
 .team-crest {
-    width: 22px;
-    height: 22px;
+    width: 34px;
+    height: 34px;
     object-fit: contain;
-    vertical-align: -5px;
-    margin: 0 5px;
-    border-radius: 4px;
+    vertical-align: -9px;
+    margin: 0 6px;
+    border-radius: 6px;
     flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .team-crest {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .meci-value {
     display: flex;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+}
+
+.meci-text {
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 footer {
@@ -663,18 +677,39 @@ footer {
     margin-bottom: 15px;
 }
 
+.countdown-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.countdown-crest {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #ffffff;
+    padding: 4px;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 2px #FFD700;
+    display: none;
+    flex-shrink: 0;
+}
+
 .countdown-timer {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
+    gap: 8px;
+    flex-wrap: nowrap;
 }
 
 .countdown-box {
     background: #1a1a1a;
     border-radius: 8px;
-    padding: 10px 15px;
-    min-width: 70px;
+    padding: 8px 10px;
+    min-width: 62px;
 }
 
 .countdown-number {
@@ -691,11 +726,25 @@ footer {
 
 @media (max-width: 768px) {
     .countdown-box {
-        min-width: 55px;
-        padding: 8px 10px;
+        min-width: 44px;
+        padding: 6px 5px;
     }
     .countdown-number {
-        font-size: 24px;
+        font-size: 20px;
+    }
+    .countdown-label {
+        font-size: 10px;
+    }
+    .countdown-crest {
+        width: 26px;
+        height: 26px;
+        padding: 2px;
+    }
+    .countdown-row {
+        gap: 4px;
+    }
+    .countdown-timer {
+        gap: 4px;
     }
 }
 
@@ -704,7 +753,7 @@ footer {
 <body>
 
 <nav class="side-nav">
-    <div class="side-nav-title">MENIU</div>
+    <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
     <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate</a>
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
@@ -735,23 +784,27 @@ footer {
         <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
         <div class="countdown-match" id="countdown-match-name">Seven Stars - Arsenal Sp 1</div>
-        <div class="countdown-timer">
-            <div class="countdown-box">
-                <span class="countdown-number" id="countdown-days">00</span>
-                <span class="countdown-label">Zile</span>
+        <div class="countdown-row">
+            <img class="countdown-crest" id="countdown-crest-home" src="" alt="">
+            <div class="countdown-timer">
+                <div class="countdown-box">
+                    <span class="countdown-number" id="countdown-days">00</span>
+                    <span class="countdown-label">Zile</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="countdown-hours">00</span>
+                    <span class="countdown-label">Ore</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="countdown-minutes">00</span>
+                    <span class="countdown-label">Minute</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="countdown-seconds">00</span>
+                    <span class="countdown-label">Secunde</span>
+                </div>
             </div>
-            <div class="countdown-box">
-                <span class="countdown-number" id="countdown-hours">00</span>
-                <span class="countdown-label">Ore</span>
-            </div>
-            <div class="countdown-box">
-                <span class="countdown-number" id="countdown-minutes">00</span>
-                <span class="countdown-label">Minute</span>
-            </div>
-            <div class="countdown-box">
-                <span class="countdown-number" id="countdown-seconds">00</span>
-                <span class="countdown-label">Secunde</span>
-            </div>
+            <img class="countdown-crest" id="countdown-crest-away" src="" alt="">
         </div>
     </div>
 
@@ -933,6 +986,25 @@ footer {
         });
     }
 
+    // Pune stemele echipelor in stanga/dreapta countdown-ului, aliniate cu cifrele.
+    function attachCountdownCrests() {
+        var nameEl = document.getElementById("countdown-match-name");
+        if (!nameEl) return;
+        var parts = nameEl.textContent.trim().split(/\s-\s/);
+        if (parts.length !== 2) return;
+
+        var pairs = [["home", parts[0]], ["away", parts[1]]];
+        pairs.forEach(function(pair) {
+            var file = crestFile(pair[1]);
+            var img = document.getElementById("countdown-crest-" + pair[0]);
+            if (file && img) {
+                img.src = file;
+                img.alt = pair[1].trim();
+                img.style.display = "block";
+            }
+        });
+    }
+
     function attachCrests() {
         document.querySelectorAll('td[data-label="Meci"]').forEach(function(cell) {
             if (cell.dataset.crestsDone) return;
@@ -941,7 +1013,7 @@ footer {
             if (parts.length === 2) {
                 cell.innerHTML = '<span class="meci-value">' +
                     crestImg(parts[0]) +
-                    '<span>' + parts[0].trim() + ' - ' + parts[1].trim() + '</span>' +
+                    '<span class="meci-text">' + parts[0].trim() + ' - ' + parts[1].trim() + '</span>' +
                     crestImg(parts[1]) +
                     '</span>';
                 cell.dataset.crestsDone = "1";
@@ -952,6 +1024,7 @@ footer {
     document.addEventListener("DOMContentLoaded", function() {
         attachCrests();
         attachBannerCrests();
+        attachCountdownCrests();
     });
 
     function goHome() {
