@@ -366,18 +366,6 @@ header p {
     z-index: 2;
 }
 
-.logo {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    z-index: 2;
-}
-
-.logo img {
-    width: 100px;
-    height: auto;
-}
-
 header h1 {
     margin: 10px 0 5px;
     font-size: 42px;
@@ -455,8 +443,6 @@ th, td {
     width: 34px;
     height: 34px;
     object-fit: contain;
-    vertical-align: -9px;
-    margin: 0 6px;
     border-radius: 6px;
     flex-shrink: 0;
 }
@@ -471,12 +457,14 @@ th, td {
 .meci-value {
     display: flex;
     align-items: center;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    gap: 6px 10px;
 }
 
-.meci-text {
-    flex: 1 1 auto;
-    min-width: 0;
+.meci-team {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 footer {
@@ -491,15 +479,6 @@ footer {
 
     header {
         min-height: 220px;
-    }
-
-    .logo img {
-        width: 60px;
-    }
-
-    .logo {
-        top: 10px;
-        right: 10px;
     }
 
     header h1 {
@@ -686,12 +665,12 @@ footer {
 }
 
 .countdown-crest {
-    width: 42px;
-    height: 42px;
+    width: 64px;
+    height: 64px;
     object-fit: contain;
     border-radius: 50%;
     background: #ffffff;
-    padding: 4px;
+    padding: 5px;
     box-sizing: border-box;
     box-shadow: 0 0 0 2px #FFD700;
     display: none;
@@ -726,8 +705,8 @@ footer {
 
 @media (max-width: 768px) {
     .countdown-box {
-        min-width: 44px;
-        padding: 6px 5px;
+        min-width: 38px;
+        padding: 6px 4px;
     }
     .countdown-number {
         font-size: 20px;
@@ -736,15 +715,31 @@ footer {
         font-size: 10px;
     }
     .countdown-crest {
-        width: 26px;
-        height: 26px;
-        padding: 2px;
+        width: 42px;
+        height: 42px;
+        padding: 3px;
     }
     .countdown-row {
         gap: 4px;
+        flex-wrap: nowrap;
     }
     .countdown-timer {
         gap: 4px;
+    }
+}
+
+@media (max-width: 380px) {
+    .countdown-crest {
+        width: 34px;
+        height: 34px;
+        padding: 2px;
+    }
+    .countdown-box {
+        min-width: 34px;
+        padding: 6px 3px;
+    }
+    .countdown-number {
+        font-size: 18px;
     }
 }
 
@@ -767,10 +762,6 @@ footer {
 
     <div class="header-slides" id="header-slides"></div>
     <div class="header-overlay"></div>
-
-    <div class="logo">
-        <img src="logo.png.png" alt="SEVEN Stars Logo">
-    </div>
 
     <h1>SEVEN STARS</h1>
     <p>Academie de Fotbal pentru Copii</p>
@@ -1012,9 +1003,9 @@ footer {
             var parts = text.split(/\s-\s/);
             if (parts.length === 2) {
                 cell.innerHTML = '<span class="meci-value">' +
-                    crestImg(parts[0]) +
-                    '<span class="meci-text">' + parts[0].trim() + ' - ' + parts[1].trim() + '</span>' +
-                    crestImg(parts[1]) +
+                    '<span class="meci-team">' + crestImg(parts[0]) + '<span>' + parts[0].trim() + '</span></span>' +
+                    '<span class="meci-sep">-</span>' +
+                    '<span class="meci-team">' + crestImg(parts[1]) + '<span>' + parts[1].trim() + '</span></span>' +
                     '</span>';
                 cell.dataset.crestsDone = "1";
             }
