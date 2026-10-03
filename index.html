@@ -774,7 +774,7 @@ footer {
         <div class="card-slides" id="countdown-slides"></div>
         <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
-        <div class="countdown-match" id="countdown-match-name">Seven Stars - Arsenal Sp 1</div>
+        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V 2</div>
         <div class="countdown-row">
             <img class="countdown-crest" id="countdown-crest-home" src="" alt="">
             <div class="countdown-timer">
@@ -846,29 +846,94 @@ footer {
                     <path d="M64 26 L76 32 Q78 34 77 37 L72 46 Q71 48 69 47 L64 44 L64 78 Q50 83 36 78 L36 44 L31 47 Q29 48 28 46 L23 37 Q22 34 24 32 L36 26 Q37 25 39 26 Q44 31 50 31 Q56 31 61 26 Q63 25 64 26 Z" fill="none" stroke="#c9a400" stroke-width="1"/>
                     <path d="M40 27 Q45 33 50 33 Q55 33 60 27" fill="none" stroke="#FFD700" stroke-width="2"/>
                 </svg>
-                <div class="match-banner-name" id="banner-team-away">Arsenal Sp 1</div>
+                <div class="match-banner-name" id="banner-team-away">Alex V 2</div>
             </div>
 
         </div>
-        <div class="match-banner-date" id="banner-match-date">03.10.2026 &bull; 12:40</div>
+        <div class="match-banner-date" id="banner-match-date">10.10.2026 &bull; 13:30</div>
     </div>
 
 </div>
 
 <script>
-    var targetDate = new Date("2026-10-03T12:40:00");
+    // Citeste tabelul "Meciuri Viitoare" si gaseste automat primul meci cu
+    // data/ora in viitor. Nu mai trebuie schimbata manual data tinta -
+    // e suficient sa tii tabelul actualizat (si sa stergi meciurile jucate).
+    var targetDate = null;
+    var currentMatchKey = "";
+
+    function parseMatchDate(dataStr, oraStr) {
+        var dp = dataStr.split(".");
+        if (dp.length !== 3) return null;
+        var day = parseInt(dp[0], 10);
+        var month = parseInt(dp[1], 10) - 1;
+        var year = parseInt(dp[2], 10);
+        var tp = oraStr.split(":");
+        var hour = tp.length > 0 ? parseInt(tp[0], 10) : 0;
+        var minute = tp.length > 1 ? parseInt(tp[1], 10) : 0;
+        var d = new Date(year, month, day, hour, minute, 0, 0);
+        return isNaN(d.getTime()) ? null : d;
+    }
+
+    function getUpcomingMatches() {
+        var rows = document.querySelectorAll("#viitoare table tr");
+        var matches = [];
+        rows.forEach(function(row) {
+            var cells = row.querySelectorAll("td");
+            if (cells.length < 3) return;
+            var dataStr = cells[0].textContent.trim();
+            var oraStr = cells[1].textContent.trim();
+            var meciStr = cells[2].textContent.trim();
+            var date = parseMatchDate(dataStr, oraStr);
+            if (!date) return;
+            matches.push({ date: date, meci: meciStr, dataStr: dataStr, oraStr: oraStr });
+        });
+        matches.sort(function(a, b) { return a.date - b.date; });
+        return matches;
+    }
+
+    function pickNextMatch() {
+        var now = new Date();
+        var matches = getUpcomingMatches();
+        for (var i = 0; i < matches.length; i++) {
+            if (matches[i].date > now) return matches[i];
+        }
+        return matches.length ? matches[matches.length - 1] : null;
+    }
+
+    function applyMatch(match) {
+        if (!match) return;
+        targetDate = match.date;
+        currentMatchKey = match.dataStr + " " + match.oraStr + " " + match.meci;
+        document.getElementById("countdown-match-name").textContent = match.meci;
+        document.getElementById("banner-match-date").textContent = match.dataStr + " \u2022 " + match.oraStr;
+        var parts = match.meci.split(/\s-\s/);
+        if (parts.length === 2) {
+            document.getElementById("banner-team-home").textContent = parts[0].trim();
+            document.getElementById("banner-team-away").textContent = parts[1].trim();
+        }
+    }
 
     function updateCountdown() {
         var now = new Date();
-        var diff = targetDate - now;
+        var diff = targetDate ? targetDate - now : -1;
 
         if (diff <= 0) {
-            document.getElementById("countdown-match-name").textContent = "Meciul a început!";
-            document.getElementById("countdown-days").textContent = "00";
-            document.getElementById("countdown-hours").textContent = "00";
-            document.getElementById("countdown-minutes").textContent = "00";
-            document.getElementById("countdown-seconds").textContent = "00";
-            return;
+            var next = pickNextMatch();
+            var nextKey = next ? (next.dataStr + " " + next.oraStr + " " + next.meci) : "";
+            if (next && nextKey !== currentMatchKey) {
+                applyMatch(next);
+                attachBannerCrests();
+                attachCountdownCrests();
+                diff = targetDate - now;
+            } else {
+                document.getElementById("countdown-match-name").textContent = "Meciul a început!";
+                document.getElementById("countdown-days").textContent = "00";
+                document.getElementById("countdown-hours").textContent = "00";
+                document.getElementById("countdown-minutes").textContent = "00";
+                document.getElementById("countdown-seconds").textContent = "00";
+                return;
+            }
         }
 
         var days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -881,9 +946,6 @@ footer {
         document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
         document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
     }
-
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
 
     var galleryImages = [];
     var currentImageIndex = 0;
@@ -966,13 +1028,17 @@ footer {
             if (!nameEl) return;
             var file = crestFile(nameEl.textContent);
             if (!file) return;
-            var svg = nameEl.previousElementSibling;
-            if (svg && svg.tagName && svg.tagName.toLowerCase() === "svg") {
+            var el = nameEl.previousElementSibling;
+            if (!el) return;
+            if (el.tagName && el.tagName.toLowerCase() === "svg") {
                 var img = document.createElement("img");
                 img.src = file;
                 img.alt = nameEl.textContent.trim();
                 img.className = "player-silhouette banner-crest";
-                svg.parentNode.replaceChild(img, svg);
+                el.parentNode.replaceChild(img, el);
+            } else {
+                el.src = file;
+                el.alt = nameEl.textContent.trim();
             }
         });
     }
@@ -1013,6 +1079,9 @@ footer {
     }
 
     document.addEventListener("DOMContentLoaded", function() {
+        applyMatch(pickNextMatch());
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
         attachCrests();
         attachBannerCrests();
         attachCountdownCrests();
@@ -1063,6 +1132,21 @@ footer {
             <th>Status</th>
             <th>Video</th>
         </tr>
+<tr>
+            <td data-label="Data">03.10.2026</td>
+            <td data-label="Ora">12:40</td>
+            <td data-label="Meci">Seven Stars - Arsenal Sp 1</td>
+            <td data-label="Scor">9-3</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="LINK MECI">
+                <a href="https://youtu.be/JJteeGOrvZ0"
+target="_blank"
+class="youtube-btn">
+▶ Video
+</a>
+            </td>
+        </tr>
+
 <tr>
             <td data-label="Data">26.09.2026</td>
             <td data-label="Ora">08:30</td>
@@ -1160,12 +1244,6 @@ class="youtube-btn">
             <th>Data</th>
             <th>Ora</th>
             <th>Meci</th>
-        </tr>
-
-                <tr>
-            <td data-label="Data">3.10.2026</td>
-            <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Seven Stars - Arsenal Sp 1</td>
         </tr>
 
         <tr>
