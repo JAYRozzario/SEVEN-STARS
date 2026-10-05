@@ -1604,14 +1604,13 @@ class="youtube-btn">
 </div>
 
 <script>
-// Fundal static: doar poza36.webp (nu mai ruleaza slideshow cu toate pozele)
+// Fundal static, cate o singura poza pentru fiecare zona (fara slideshow)
 (function() {
-    var BG_SRC = "poza36.webp";
-    var containers = [
-        document.getElementById("header-slides"),
-        document.getElementById("countdown-slides"),
-        document.getElementById("banner-slides")
-    ].filter(function(c) { return c; });
+    var BACKGROUNDS = [
+        { id: "header-slides",    src: "poza23.jpeg" },
+        { id: "countdown-slides", src: "poza36.webp" },
+        { id: "banner-slides",    src: "poza3.jpeg" }
+    ];
 
     var slides = [];
 
@@ -1623,18 +1622,18 @@ class="youtube-btn">
         slide.classList.toggle("cover", imgRatio >= 0.45 * hostRatio);
     }
 
-    function createSlideIn(container, ratio) {
+    function createSlideIn(container, src, ratio) {
         var slide = document.createElement("div");
         slide.className = "header-slide active";
         slide.setAttribute("data-ratio", ratio);
 
         var bg = document.createElement("div");
         bg.className = "slide-bg";
-        bg.style.backgroundImage = 'url("' + BG_SRC + '")';
+        bg.style.backgroundImage = 'url("' + src + '")';
 
         var fg = document.createElement("div");
         fg.className = "slide-fg";
-        fg.style.backgroundImage = 'url("' + BG_SRC + '")';
+        fg.style.backgroundImage = 'url("' + src + '")';
 
         slide.appendChild(bg);
         slide.appendChild(fg);
@@ -1647,12 +1646,16 @@ class="youtube-btn">
         slides.forEach(updateMode);
     }
 
-    var im = new Image();
-    im.onload = function() {
-        var ratio = im.naturalWidth / im.naturalHeight;
-        slides = containers.map(function(c) { return createSlideIn(c, ratio); });
-    };
-    im.src = BG_SRC;
+    BACKGROUNDS.forEach(function(item) {
+        var container = document.getElementById(item.id);
+        if (!container) return;
+        var im = new Image();
+        im.onload = function() {
+            var ratio = im.naturalWidth / im.naturalHeight;
+            slides.push(createSlideIn(container, item.src, ratio));
+        };
+        im.src = item.src;
+    });
 
     window.addEventListener("resize", refreshModes);
     window.addEventListener("load", refreshModes);
