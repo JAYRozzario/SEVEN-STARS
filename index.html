@@ -534,6 +534,61 @@ th, td {
     font-size: 15px;
 }
 
+.top-scorers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 500px;
+}
+
+.top-scorers li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 30px;
+    padding: 10px 16px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.top-scorers .rank {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #000000;
+    color: #FFD700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    flex-shrink: 0;
+}
+
+.top-scorers li:nth-child(1) .rank {
+    background: #FFD700;
+    color: #000000;
+}
+
+.top-scorers .pname {
+    flex: 1;
+}
+
+.top-scorers .goals {
+    background: #FFD700;
+    color: #000000;
+    border-radius: 20px;
+    padding: 3px 12px;
+}
+
+.top-scorers-total {
+    margin-top: 15px;
+    color: #666666;
+    font-size: 14px;
+}
+
 footer {
     background: #000000;
     color: #FFD700;
@@ -820,6 +875,7 @@ footer {
     <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate</a>
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
     <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa"><span class="nav-icon">👥</span> Echipa</a>
+    <a href="#" onclick="toggleSection('golgheter'); return false;" id="nav-golgheter"><span class="nav-icon">👟</span> Golgheter</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -1154,9 +1210,38 @@ footer {
         updateCountdown();
         setInterval(updateCountdown, 1000);
         attachCrests();
+        buildTopScorers();
         attachBannerCrests();
         attachCountdownCrests();
     });
+
+    // Top marcatori: se calculeaza automat din blocurile "Marcatori" de la Rezultate.
+    // La fiecare meci nou e suficient sa adaugi marcatorii in format "Nume X. (goluri)".
+    function buildTopScorers() {
+        var totals = {};
+        document.querySelectorAll("#rezultate .scorers-list div").forEach(function(el) {
+            var m = el.textContent.trim().match(/^(.*?)\s*\((\d+)\)\s*$/);
+            if (!m) return;
+            var display = m[1].trim();
+            var key = display.replace(/\./g, "").replace(/\s+/g, " ").toLowerCase();
+            if (!totals[key]) totals[key] = { name: display, goals: 0 };
+            totals[key].goals += parseInt(m[2], 10);
+        });
+        var list = Object.keys(totals).map(function(k) { return totals[k]; });
+        list.sort(function(a, b) { return b.goals - a.goals || a.name.localeCompare(b.name); });
+
+        var ol = document.getElementById("top-scorers");
+        var sum = 0;
+        ol.innerHTML = "";
+        list.forEach(function(p, i) {
+            sum += p.goals;
+            var li = document.createElement("li");
+            li.innerHTML = '<span class="rank">' + (i + 1) + '</span><span class="pname"></span><span class="goals">' + p.goals + (p.goals === 1 ? ' gol' : ' goluri') + '</span>';
+            li.querySelector(".pname").textContent = p.name;
+            ol.appendChild(li);
+        });
+        document.getElementById("top-scorers-total").textContent = "Total goluri marcate de jucători: " + sum;
+    }
 
     function toggleScorers(btn) {
         btn.classList.toggle("open");
@@ -1449,6 +1534,15 @@ class="youtube-btn">
         <li>Vlad Dorobat</li>
         <li>Alex Teodor</li>
     </ul>
+
+</section>
+
+<section id="golgheter" class="toggle-section">
+
+    <h2>Golgheter</h2>
+
+    <ol class="top-scorers" id="top-scorers"></ol>
+    <div class="top-scorers-total" id="top-scorers-total"></div>
 
 </section>
 
