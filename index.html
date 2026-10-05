@@ -467,6 +467,72 @@ th, td {
     gap: 8px;
 }
 
+
+.scorers-toggle {
+    display: inline-block;
+    margin-top: 8px;
+    background: #000000;
+    color: #FFD700;
+    border: 1px solid #000000;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.scorers-toggle:hover {
+    background: #1a1a1a;
+    border-color: #FFD700;
+}
+
+.scorers-toggle .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    margin-left: 4px;
+}
+
+.scorers-toggle.open .arrow {
+    transform: rotate(180deg);
+}
+
+.scorers-list {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #fffbe6;
+    border-left: 4px solid #FFD700;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.scorers-list.open {
+    display: block;
+}
+
+.scorers-list div {
+    padding: 2px 0;
+}
+
+.team-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 10px;
+}
+
+.team-list li {
+    background: #000000;
+    color: #FFD700;
+    font-weight: bold;
+    padding: 12px 16px;
+    border-radius: 30px;
+    font-size: 15px;
+}
+
 footer {
     background: #000000;
     color: #FFD700;
@@ -752,6 +818,7 @@ footer {
     <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
     <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate</a>
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
+    <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa"><span class="nav-icon">👥</span> Echipa</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -1065,6 +1132,8 @@ footer {
     function attachCrests() {
         document.querySelectorAll('td[data-label="Meci"]').forEach(function(cell) {
             if (cell.dataset.crestsDone) return;
+            var extra = cell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
             var text = cell.textContent.trim();
             var parts = text.split(/\s-\s/);
             if (parts.length === 2) {
@@ -1075,6 +1144,7 @@ footer {
                     '</span>';
                 cell.dataset.crestsDone = "1";
             }
+            if (extra) cell.appendChild(extra);
         });
     }
 
@@ -1086,6 +1156,11 @@ footer {
         attachBannerCrests();
         attachCountdownCrests();
     });
+
+    function toggleScorers(btn) {
+        btn.classList.toggle("open");
+        btn.nextElementSibling.classList.toggle("open");
+    }
 
     function goHome() {
         document.querySelectorAll(".toggle-section").forEach(function(s) {
@@ -1135,7 +1210,16 @@ footer {
 <tr>
             <td data-label="Data">03.10.2026</td>
             <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Seven Stars - Arsenal Sp 1</td>
+            <td data-label="Meci">Seven Stars - Arsenal Sp 1
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <div class="scorers-list">
+                        <div>Rares O. (4)</div>
+                        <div>Denis C. (2)</div>
+                        <div>David T. (2)</div>
+                        <div>Patrick S. (1)</div>
+                    </div>
+                </div></td>
             <td data-label="Scor">9-3</td>
             <td data-label="Status" class="win">Victorie</td>
             <td data-label="LINK MECI">
@@ -1310,46 +1394,66 @@ class="youtube-btn">
 
 </section>
 
+<section id="echipa" class="toggle-section">
+
+    <h2>Echipa</h2>
+
+    <ul class="team-list">
+        <li>Manescu Nectarie (P)</li>
+        <li>Andrei Dobriceanu</li>
+        <li>Patrick Scarlat</li>
+        <li>Andrei Arhip</li>
+        <li>Denis Constantin</li>
+        <li>Gogea Damian</li>
+        <li>Rares Olaru</li>
+        <li>David Tone</li>
+        <li>Marco Neagu</li>
+        <li>Vlad Dorobat</li>
+        <li>Alex Teodor</li>
+    </ul>
+
+</section>
+
 <section id="galerie" class="toggle-section">
 
     <h2>Galerie</h2>
 
     <div class="gallery-grid">
-        <img src="poza1.jpeg" alt="Poza 1" onclick="openLightbox(this)">
-        <img src="poza2.jpeg" alt="Poza 2" onclick="openLightbox(this)">
-        <img src="poza3.jpeg" alt="Poza 3" onclick="openLightbox(this)">
-        <img src="poza4.jpeg" alt="Poza 4" onclick="openLightbox(this)">
-        <img src="poza5.jpeg" alt="Poza 5" onclick="openLightbox(this)">
-        <img src="poza6.jpeg" alt="Poza 6" onclick="openLightbox(this)">
-        <img src="poza7.jpeg" alt="Poza 7" onclick="openLightbox(this)">
-        <img src="poza8.jpeg" alt="Poza 8" onclick="openLightbox(this)">
-        <img src="poza19.jpeg" alt="Poza 9" onclick="openLightbox(this)">
-        <img src="poza10.jpeg" alt="Poza 10" onclick="openLightbox(this)">
-        <img src="poza11.jpeg" alt="Poza 11" onclick="openLightbox(this)">
-        <img src="poza12.jpeg" alt="Poza 12" onclick="openLightbox(this)">
-        <img src="poza13.jpeg" alt="Poza 13" onclick="openLightbox(this)">
-        <img src="poza14.jpeg" alt="Poza 14" onclick="openLightbox(this)">
-        <img src="poza15.jpeg.jpeg" alt="Poza 15" onclick="openLightbox(this)">
-        <img src="Image16.jpeg" alt="Poza 16" onclick="openLightbox(this)">
-        <img src="Image17.jpeg" alt="Poza 17" onclick="openLightbox(this)">
-        <img src="poza18.jpeg" alt="Poza 18" onclick="openLightbox(this)">
-        <img src="poza20.jpeg" alt="Poza 20" onclick="openLightbox(this)">
-        <img src="poza21.jpeg" alt="Poza 21" onclick="openLightbox(this)">
-        <img src="poza22.jpeg" alt="Poza 22" onclick="openLightbox(this)">
-        <img src="poza23.jpeg" alt="Poza 23" onclick="openLightbox(this)">
-        <img src="poza24.webp" alt="Poza 24" onclick="openLightbox(this)">
-        <img src="poza25.webp" alt="Poza 25" onclick="openLightbox(this)">
-        <img src="poza26.webp" alt="Poza 26" onclick="openLightbox(this)">
-        <img src="poza27.webp" alt="Poza 27" onclick="openLightbox(this)">
-        <img src="poza28.webp" alt="Poza 28" onclick="openLightbox(this)">
-        <img src="poza29.webp" alt="Poza 29" onclick="openLightbox(this)">
-        <img src="poza30.webp" alt="Poza 30" onclick="openLightbox(this)">
-        <img src="poza31.webp" alt="Poza 31" onclick="openLightbox(this)">
-        <img src="poza32.webp" alt="Poza 32" onclick="openLightbox(this)">
-        <img src="poza33.webp" alt="Poza 33" onclick="openLightbox(this)">
-        <img src="poza34.webp" alt="Poza 34" onclick="openLightbox(this)">
-        <img src="poza35.webp" alt="Poza 35" onclick="openLightbox(this)">
-        <img src="poza36.webp" alt="Poza 36" onclick="openLightbox(this)">
+        <img src="poza1.jpeg" alt="Poza 1" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza2.jpeg" alt="Poza 2" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza3.jpeg" alt="Poza 3" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza4.jpeg" alt="Poza 4" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza5.jpeg" alt="Poza 5" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza6.jpeg" alt="Poza 6" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza7.jpeg" alt="Poza 7" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza8.jpeg" alt="Poza 8" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza19.jpeg" alt="Poza 9" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza10.jpeg" alt="Poza 10" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza11.jpeg" alt="Poza 11" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza12.jpeg" alt="Poza 12" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza13.jpeg" alt="Poza 13" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza14.jpeg" alt="Poza 14" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza15.jpeg.jpeg" alt="Poza 15" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="Image16.jpeg" alt="Poza 16" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="Image17.jpeg" alt="Poza 17" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza18.jpeg" alt="Poza 18" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza20.jpeg" alt="Poza 20" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza21.jpeg" alt="Poza 21" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza22.jpeg" alt="Poza 22" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza23.jpeg" alt="Poza 23" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza24.webp" alt="Poza 24" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza25.webp" alt="Poza 25" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza26.webp" alt="Poza 26" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza27.webp" alt="Poza 27" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza28.webp" alt="Poza 28" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza29.webp" alt="Poza 29" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza30.webp" alt="Poza 30" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza31.webp" alt="Poza 31" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza32.webp" alt="Poza 32" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza33.webp" alt="Poza 33" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza34.webp" alt="Poza 34" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza35.webp" alt="Poza 35" loading="lazy" decoding="async" onclick="openLightbox(this)">
+        <img src="poza36.webp" alt="Poza 36" loading="lazy" decoding="async" onclick="openLightbox(this)">
     </div>
 
 </section>
@@ -1368,22 +1472,16 @@ class="youtube-btn">
 </div>
 
 <script>
+// Fundal static: doar poza36.webp (nu mai ruleaza slideshow cu toate pozele)
 (function() {
+    var BG_SRC = "poza36.webp";
     var containers = [
         document.getElementById("header-slides"),
         document.getElementById("countdown-slides"),
         document.getElementById("banner-slides")
     ].filter(function(c) { return c; });
 
-    var sources = Array.prototype.map.call(
-        document.querySelectorAll(".gallery-grid img"),
-        function(img) { return img.getAttribute("src"); }
-    );
-    var total = sources.length;
-    var slides = new Array(total);
-    var current = -1;
-    var started = false;
-    var INTERVAL_MS = 2000;
+    var slides = [];
 
     function updateMode(slide) {
         var host = slide.parentNode;
@@ -1393,18 +1491,18 @@ class="youtube-btn">
         slide.classList.toggle("cover", imgRatio >= 0.45 * hostRatio);
     }
 
-    function createSlideIn(container, src, ratio) {
+    function createSlideIn(container, ratio) {
         var slide = document.createElement("div");
-        slide.className = "header-slide";
+        slide.className = "header-slide active";
         slide.setAttribute("data-ratio", ratio);
 
         var bg = document.createElement("div");
         bg.className = "slide-bg";
-        bg.style.backgroundImage = 'url("' + src + '")';
+        bg.style.backgroundImage = 'url("' + BG_SRC + '")';
 
         var fg = document.createElement("div");
         fg.className = "slide-fg";
-        fg.style.backgroundImage = 'url("' + src + '")';
+        fg.style.backgroundImage = 'url("' + BG_SRC + '")';
 
         slide.appendChild(bg);
         slide.appendChild(fg);
@@ -1413,39 +1511,16 @@ class="youtube-btn">
         return slide;
     }
 
-    function showNext() {
-        for (var step = 1; step <= total; step++) {
-            var idx = (current + step) % total;
-            if (slides[idx]) {
-                if (current >= 0 && slides[current]) {
-                    slides[current].forEach(function(s) { s.classList.remove("active"); });
-                }
-                slides[idx].forEach(function(s) { s.classList.add("active"); });
-                current = idx;
-                return;
-            }
-        }
-    }
-
     function refreshModes() {
-        slides.forEach(function(group) {
-            if (group) group.forEach(function(s) { updateMode(s); });
-        });
+        slides.forEach(updateMode);
     }
 
-    sources.forEach(function(src, i) {
-        var im = new Image();
-        im.onload = function() {
-            var ratio = im.naturalWidth / im.naturalHeight;
-            slides[i] = containers.map(function(c) { return createSlideIn(c, src, ratio); });
-            if (!started) {
-                started = true;
-                showNext();
-                setInterval(showNext, INTERVAL_MS);
-            }
-        };
-        im.src = src;
-    });
+    var im = new Image();
+    im.onload = function() {
+        var ratio = im.naturalWidth / im.naturalHeight;
+        slides = containers.map(function(c) { return createSlideIn(c, ratio); });
+    };
+    im.src = BG_SRC;
 
     window.addEventListener("resize", refreshModes);
     window.addEventListener("load", refreshModes);
