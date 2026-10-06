@@ -534,6 +534,27 @@ th, td {
     font-size: 15px;
 }
 
+.team-list li.has-photo {
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.player-photo {
+    display: none;
+    margin-top: 10px;
+}
+
+.player-photo.open {
+    display: block;
+}
+
+.player-photo img {
+    max-width: 220px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
 .top-scorers {
     list-style: none;
     margin: 0;
@@ -1248,6 +1269,12 @@ footer {
         btn.nextElementSibling.classList.toggle("open");
     }
 
+    function togglePlayerPhoto(li) {
+        var photo = li.querySelector(".player-photo");
+        if (!photo) return;
+        photo.classList.toggle("open");
+    }
+
     function goHome() {
         document.querySelectorAll(".toggle-section").forEach(function(s) {
             s.classList.remove("open");
@@ -1526,13 +1553,25 @@ class="youtube-btn">
         <li>Andrei Dobriceanu (P)</li>
         <li>Patrick Scarlat</li>
         <li>Andrei Arhip</li>
-        <li>Denis Constantin</li>
-        <li>Gogea Damian</li>
-        <li>Rares Olaru</li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Denis Constantin
+            <div class="player-photo"><img src="Denis Constantin.jpg" alt="Denis Constantin" loading="lazy"></div>
+        </li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Gogea Damian
+            <div class="player-photo"><img src="Gogea Damian.jpg" alt="Gogea Damian" loading="lazy"></div>
+        </li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Rares Olaru
+            <div class="player-photo"><img src="Rares Olaru.jpg" alt="Rares Olaru" loading="lazy"></div>
+        </li>
         <li>David Tone</li>
-        <li>Marco Neagu</li>
-        <li>Vlad Dorobat</li>
-        <li>Alex Teodor</li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Marco Neagu
+            <div class="player-photo"><img src="Marco Neagu.jpg" alt="Marco Neagu" loading="lazy"></div>
+        </li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Vlad Dorobat
+            <div class="player-photo"><img src="Vlad Dorobat.jpg" alt="Vlad Dorobat" loading="lazy"></div>
+        </li>
+        <li class="has-photo" onclick="togglePlayerPhoto(this)">Alex Teodor
+            <div class="player-photo"><img src="Alex Teodor.jpg" alt="Alex Teodor" loading="lazy"></div>
+        </li>
     </ul>
 
 </section>
