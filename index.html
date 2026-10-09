@@ -555,6 +555,23 @@ th, td {
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
+.player-photo.small img {
+    max-width: 150px;
+}
+
+.team-photo {
+    max-width: 500px;
+    margin: 0 0 20px;
+}
+
+.team-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+
 .top-scorers {
     list-style: none;
     margin: 0;
@@ -1548,9 +1565,13 @@ class="youtube-btn">
 
     <h2>Echipa</h2>
 
+    <div class="team-photo">
+        <img src="echipa.jpeg" alt="Echipa SEVEN Stars cu antrenorul" width="1600" height="739" loading="lazy">
+    </div>
+
     <ul class="team-list">
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Manescu Nectarie (P)
-            <div class="player-photo"><img src="Manescu Nectarie (P).webp" alt="Manescu Nectarie (P)" loading="lazy"></div>
+            <div class="player-photo small"><img src="Nectarie.webp" alt="Manescu Nectarie (P)" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Andrei Dobriceanu (P)
             <div class="player-photo"><img src="Andrei.webp" alt="Andrei Dobriceanu (P)" loading="lazy"></div>
