@@ -592,6 +592,31 @@ th, td {
     font-weight: bold;
 }
 
+.top-scorers li {
+    flex-wrap: wrap;
+}
+
+.top-scorers li.has-photo {
+    cursor: pointer;
+}
+
+.top-scorers li.has-photo.open {
+    border-radius: 20px;
+}
+
+.top-scorers .cam {
+    margin-left: 6px;
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+.top-scorers li .player-photo {
+    flex: 0 0 100%;
+    box-sizing: border-box;
+    padding-left: 40px;
+    margin-top: 4px;
+}
+
 .top-scorers .rank {
     width: 28px;
     height: 28px;
@@ -916,7 +941,7 @@ footer {
 
 .crest-fly {
     animation-name: crestFly, crestFade;
-    animation-duration: 1.2s, 0.3s;
+    animation-duration: 2.4s, 0.6s;
     animation-timing-function: cubic-bezier(0.22, 1.15, 0.36, 1), ease-out;
     animation-fill-mode: both, both;
 }
@@ -1231,11 +1256,11 @@ footer {
                 img.alt = nameEl.textContent.trim();
                 img.className = "player-silhouette banner-crest";
                 el.parentNode.replaceChild(img, el);
-                flyInCrest(img, side === "home" ? 0.3 : 0.6);
+                flyInCrest(img, side === "home" ? 0.4 : 0.9);
             } else {
                 el.src = file;
                 el.alt = nameEl.textContent.trim();
-                flyInCrest(el, side === "home" ? 0.3 : 0.6);
+                flyInCrest(el, side === "home" ? 0.4 : 0.9);
             }
         });
     }
@@ -1255,7 +1280,7 @@ footer {
                 img.src = file;
                 img.alt = pair[1].trim();
                 img.style.display = "block";
-                flyInCrest(img, pair[0] === "home" ? 0.3 : 0.6);
+                flyInCrest(img, pair[0] === "home" ? 0.4 : 0.9);
             }
         });
     }
@@ -1291,6 +1316,36 @@ footer {
 
     // Top marcatori: se calculeaza automat din blocurile "Marcatori" de la Rezultate.
     // La fiecare meci nou e suficient sa adaugi marcatorii in format "Nume X. (goluri)".
+    // Gaseste poza jucatorului din sectiunea Echipa, dupa numele scurt din
+    // Golgheter (ex. "David T." -> "David Tone" -> David.webp).
+    function normName(s) {
+        return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/\(.*?\)/g, "").replace(/\./g, " ")
+            .toLowerCase().trim().split(/\s+/).filter(Boolean);
+    }
+
+    function findPlayerPhoto(shortName) {
+        var sp = normName(shortName);
+        if (!sp.length) return null;
+        var first = sp[0];
+        var initial = sp.length > 1 ? sp[1].charAt(0) : "";
+        var found = null;
+        document.querySelectorAll("#echipa .team-list li.has-photo").forEach(function(li) {
+            if (found) return;
+            var img = li.querySelector("img");
+            if (!img) return;
+            var tokens = normName(li.firstChild ? li.firstChild.textContent : li.textContent);
+            var fi = tokens.indexOf(first);
+            if (fi === -1) return;
+            if (!initial) { found = img; return; }
+            var ok = tokens.some(function(tk, idx) {
+                return idx !== fi && tk.charAt(0) === initial;
+            });
+            if (ok) found = img;
+        });
+        return found;
+    }
+
     function buildTopScorers() {
         var totals = {};
         document.querySelectorAll("#rezultate .scorers-list div").forEach(function(el) {
@@ -1312,6 +1367,27 @@ footer {
             var li = document.createElement("li");
             li.innerHTML = '<span class="rank">' + (i + 1) + '</span><span class="pname"></span><span class="goals">' + p.goals + (p.goals === 1 ? ' gol' : ' goluri') + '</span>';
             li.querySelector(".pname").textContent = p.name;
+
+            var photoImg = findPlayerPhoto(p.name);
+            if (photoImg) {
+                li.classList.add("has-photo");
+                var cam = document.createElement("span");
+                cam.className = "cam";
+                cam.textContent = "\uD83D\uDCF7";
+                li.querySelector(".pname").appendChild(cam);
+                var box = document.createElement("div");
+                box.className = "player-photo";
+                var pimg = document.createElement("img");
+                pimg.src = photoImg.getAttribute("src");
+                pimg.alt = photoImg.getAttribute("alt") || p.name;
+                pimg.loading = "lazy";
+                box.appendChild(pimg);
+                li.appendChild(box);
+                li.addEventListener("click", function() {
+                    li.classList.toggle("open");
+                    box.classList.toggle("open");
+                });
+            }
             ol.appendChild(li);
         });
         document.getElementById("top-scorers-total").textContent = "Total goluri marcate de jucători: " + sum;
