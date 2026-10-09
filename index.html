@@ -903,6 +903,30 @@ footer {
     }
 }
 
+/* Stemele intra din dreapta si se asaza in banner (Urmatorul meci + Meciul viitor) */
+@keyframes crestFly {
+    from { transform: translateX(520px) rotate(540deg); }
+    to   { transform: translateX(0) rotate(0deg); }
+}
+
+@keyframes crestFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.crest-fly {
+    animation-name: crestFly, crestFade;
+    animation-duration: 1.2s, 0.3s;
+    animation-timing-function: cubic-bezier(0.22, 1.15, 0.36, 1), ease-out;
+    animation-fill-mode: both, both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .crest-fly {
+        animation: none;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1184,6 +1208,15 @@ footer {
     // Pune stema reala (daca exista in TEAM_CRESTS) in locul tricoului
     // desenat, in bannerul "Meciul viitor". Daca echipa nu are stema
     // incarcata inca, tricoul colorat ramane neschimbat.
+    // Animatie: stema vine din dreapta si se aseaza pe loc.
+    function flyInCrest(el, delaySec) {
+        if (!el) return;
+        el.classList.remove("crest-fly");
+        void el.offsetWidth;
+        el.style.animationDelay = delaySec + "s, " + delaySec + "s";
+        el.classList.add("crest-fly");
+    }
+
     function attachBannerCrests() {
         ["home", "away"].forEach(function(side) {
             var nameEl = document.getElementById("banner-team-" + side);
@@ -1198,9 +1231,11 @@ footer {
                 img.alt = nameEl.textContent.trim();
                 img.className = "player-silhouette banner-crest";
                 el.parentNode.replaceChild(img, el);
+                flyInCrest(img, side === "home" ? 0.3 : 0.6);
             } else {
                 el.src = file;
                 el.alt = nameEl.textContent.trim();
+                flyInCrest(el, side === "home" ? 0.3 : 0.6);
             }
         });
     }
@@ -1220,6 +1255,7 @@ footer {
                 img.src = file;
                 img.alt = pair[1].trim();
                 img.style.display = "block";
+                flyInCrest(img, pair[0] === "home" ? 0.3 : 0.6);
             }
         });
     }
