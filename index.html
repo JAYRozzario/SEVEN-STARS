@@ -813,6 +813,33 @@ footer {
     color: #cccccc;
 }
 
+.match-banner-score {
+    width: auto;
+    height: auto;
+    min-width: 60px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 24px;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+/* Bannerele de pe prima pagina sunt clickabile */
+.hero-link {
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hero-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.hero-link:focus-visible {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+
 @media (max-width: 768px) {
     .hero-row {
         margin: 10px;
@@ -826,6 +853,12 @@ footer {
     .match-banner-name {
         font-size: 13px;
     }
+
+    .match-banner-score {
+        min-width: 50px;
+        padding: 6px 10px;
+        font-size: 19px;
+    }
 }
 
 .countdown-section h3 {
@@ -838,6 +871,12 @@ footer {
 .countdown-match {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.countdown-date {
+    font-size: 14px;
+    color: #cccccc;
     margin-bottom: 15px;
 }
 
@@ -982,11 +1021,13 @@ footer {
 
 <div class="hero-row">
 
-    <div class="countdown-section">
+    <div class="countdown-section hero-link" role="link" tabindex="0" title="Vezi Meciuri Viitoare"
+         onclick="openSection('viitoare')" onkeydown="if(event.key==='Enter'){openSection('viitoare');}">
         <div class="card-slides" id="countdown-slides"></div>
         <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
         <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V 2</div>
+        <div class="countdown-date" id="countdown-match-date"></div>
         <div class="countdown-row">
             <img class="countdown-crest" id="countdown-crest-home" src="" alt="">
             <div class="countdown-timer">
@@ -1011,10 +1052,11 @@ footer {
         </div>
     </div>
 
-    <div class="match-banner">
+    <div class="match-banner hero-link" role="link" tabindex="0" title="Vezi Rezultate Seven Stars Galben"
+         onclick="openSection('rezultate')" onkeydown="if(event.key==='Enter'){openSection('rezultate');}">
         <div class="card-slides" id="banner-slides"></div>
         <div class="card-overlay"></div>
-        <div class="match-banner-label">Meciul viitor</div>
+        <div class="match-banner-label">Ultimul rezultat</div>
         <div class="match-banner-teams">
 
             <div>
@@ -1038,7 +1080,7 @@ footer {
                 <div class="match-banner-name" id="banner-team-home">Seven Stars</div>
             </div>
 
-            <div class="match-banner-vs">VS</div>
+            <div class="match-banner-vs match-banner-score" id="banner-score">VS</div>
 
             <div>
                 <svg class="player-silhouette" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -1113,13 +1155,54 @@ footer {
         return matches.length ? matches[matches.length - 1] : null;
     }
 
+    function pad2(n) {
+        return (n < 10 ? "0" : "") + n;
+    }
+
+    // Formateaza data si ora: 17.10.2026 • 10:10
+    function formatMatchDate(d) {
+        return pad2(d.getDate()) + "." + pad2(d.getMonth() + 1) + "." + d.getFullYear() +
+            " \u2022 " + pad2(d.getHours()) + ":" + pad2(d.getMinutes());
+    }
+
     function applyMatch(match) {
         if (!match) return;
         targetDate = match.date;
         currentMatchKey = match.dataStr + " " + match.oraStr + " " + match.meci;
         document.getElementById("countdown-match-name").textContent = match.meci;
-        document.getElementById("banner-match-date").textContent = match.dataStr + " \u2022 " + match.oraStr;
-        var parts = match.meci.split(/\s-\s/);
+        document.getElementById("countdown-match-date").textContent = formatMatchDate(match.date);
+    }
+
+    // Bannerul "Ultimul rezultat": citeste automat cel mai recent meci din
+    // tabelul "Rezultate Seven Stars Galben" (cel cu data cea mai mare).
+    // Trebuie apelat INAINTE de attachCrests(), care rescrie celulele "Meci".
+    function getLastResult() {
+        var rows = document.querySelectorAll("#rezultate table tr");
+        var best = null;
+        rows.forEach(function(row) {
+            var cells = row.querySelectorAll("td");
+            if (cells.length < 4) return;
+            var date = parseMatchDate(cells[0].textContent.trim(), cells[1].textContent.trim());
+            if (!date) return;
+            var meciCell = cells[2].cloneNode(true);
+            var extra = meciCell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
+            var meci = meciCell.textContent.replace(/\s+/g, " ").trim();
+            var score = cells[3].textContent.trim();
+            if (!meci || !score) return;
+            if (!best || date > best.date) {
+                best = { date: date, meci: meci, score: score };
+            }
+        });
+        return best;
+    }
+
+    function applyLastResult() {
+        var res = getLastResult();
+        if (!res) return;
+        document.getElementById("banner-match-date").textContent = formatMatchDate(res.date);
+        document.getElementById("banner-score").textContent = res.score;
+        var parts = res.meci.split(/\s-\s/);
         if (parts.length === 2) {
             document.getElementById("banner-team-home").textContent = parts[0].trim();
             document.getElementById("banner-team-away").textContent = parts[1].trim();
@@ -1135,7 +1218,6 @@ footer {
             var nextKey = next ? (next.dataStr + " " + next.oraStr + " " + next.meci) : "";
             if (next && nextKey !== currentMatchKey) {
                 applyMatch(next);
-                attachBannerCrests();
                 attachCountdownCrests();
                 diff = targetDate - now;
             } else {
@@ -1232,7 +1314,7 @@ footer {
     }
 
     // Pune stema reala (daca exista in TEAM_CRESTS) in locul tricoului
-    // desenat, in bannerul "Meciul viitor". Daca echipa nu are stema
+    // desenat, in bannerul "Ultimul rezultat". Daca echipa nu are stema
     // incarcata inca, tricoul colorat ramane neschimbat.
     // Animatie: stema vine din dreapta si se aseaza pe loc.
     function flyInCrest(el, delaySec) {
@@ -1307,6 +1389,7 @@ footer {
 
     document.addEventListener("DOMContentLoaded", function() {
         applyMatch(pickNextMatch());
+        applyLastResult();
         updateCountdown();
         setInterval(updateCountdown, 1000);
         attachCrests();
@@ -1415,6 +1498,18 @@ footer {
         });
         document.getElementById("nav-home").classList.add("active");
         window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // Folosit de bannerele de pe prima pagina: deschide mereu sectiunea
+    // (nu o inchide daca e deja deschisa) si deruleaza pana la ea.
+    function openSection(id) {
+        var section = document.getElementById(id);
+        if (!section) return;
+        if (section.classList.contains("open")) {
+            section.scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+            toggleSection(id);
+        }
     }
 
     function toggleSection(id) {
