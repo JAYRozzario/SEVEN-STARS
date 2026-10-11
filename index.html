@@ -1316,6 +1316,7 @@ footer {
     });
 
     // Top marcatori: se calculeaza automat din blocurile "Marcatori" de la Rezultate.
+    // Doar Seven Stars GALBEN (#rezultate). Marcatorii din #negru NU se numara aici.
     // La fiecare meci nou e suficient sa adaugi marcatorii in format "Nume X. (goluri)".
     // Gaseste poza jucatorului din sectiunea Echipa, dupa numele scurt din
     // Golgheter (ex. "David T." -> "David Tone" -> David.webp).
@@ -1600,6 +1601,10 @@ class="youtube-btn">
 
 <section id="negru" class="toggle-section">
 
+    <!-- ATENTIE: Seven Stars NEGRU este alta echipa decat Seven Stars GALBEN.
+         Marcatorii de aici NU intra in Golgheter (care numara doar Galben, adica #rezultate).
+         Un jucator poate juca la ambele echipe: golurile se tin separat. -->
+
     <h2>Meciuri Seven Stars Negru</h2>
 
     <table>
@@ -1614,7 +1619,14 @@ class="youtube-btn">
         <tr>
             <td data-label="Data">10.10.2026</td>
             <td data-label="Ora">14:20</td>
-            <td data-label="Meci">Seven Stars Negru - Marius Lacatus</td>
+            <td data-label="Meci">Seven Stars Negru - Marius Lacatus
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <div class="scorers-list">
+                        <div>Alex T. (1)</div>
+                        <div>Calin T. (1)</div>
+                    </div>
+                </div></td>
             <td data-label="LINK MECI">
                 <a href="https://youtu.be/B0LTl484Vpw"
 target="_blank"
@@ -1627,7 +1639,13 @@ class="youtube-btn">
         <tr>
             <td data-label="Data">05.09.2026</td>
             <td data-label="Ora">16:30</td>
-            <td data-label="Meci">Seven Stars Negru - Sporting Kids 2</td>
+            <td data-label="Meci">Seven Stars Negru - Sporting Kids 2
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <div class="scorers-list">
+                        <div>Marco N. (1)</div>
+                    </div>
+                </div></td>
             <td data-label="LINK MECI">
                 <a href="https://www.youtube.com/watch?v=WfR7SLeune4"
 target="_blank"
