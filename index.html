@@ -515,6 +515,16 @@ th, td {
     padding: 2px 0;
 }
 
+/* doua butoane (Marcatori / Pase De Gol) unul langa altul */
+.scorers-toggle {
+    margin-right: 6px;
+}
+
+/* lista de pase de gol: acelasi stil ca la marcatori, doar bara din stanga neagra */
+.scorers-list.assists-list {
+    border-left-color: #000000;
+}
+
 .team-list {
     list-style: none;
     margin: 0;
@@ -1003,6 +1013,7 @@ footer {
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
     <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa"><span class="nav-icon">👥</span> Echipa</a>
     <a href="#" onclick="toggleSection('golgheter'); return false;" id="nav-golgheter"><span class="nav-icon">👟</span> Golgheter</a>
+    <a href="#" onclick="toggleSection('pase'); return false;" id="nav-pase"><span class="nav-icon">🎯</span> Pase De Gol</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -1026,7 +1037,7 @@ footer {
         <div class="card-slides" id="countdown-slides"></div>
         <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
-        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V 2</div>
+        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V</div>
         <div class="countdown-date" id="countdown-match-date"></div>
         <div class="countdown-row">
             <img class="countdown-crest" id="countdown-crest-home" src="" alt="">
@@ -1100,7 +1111,7 @@ footer {
                     <path d="M64 26 L76 32 Q78 34 77 37 L72 46 Q71 48 69 47 L64 44 L64 78 Q50 83 36 78 L36 44 L31 47 Q29 48 28 46 L23 37 Q22 34 24 32 L36 26 Q37 25 39 26 Q44 31 50 31 Q56 31 61 26 Q63 25 64 26 Z" fill="none" stroke="#c9a400" stroke-width="1"/>
                     <path d="M40 27 Q45 33 50 33 Q55 33 60 27" fill="none" stroke="#FFD700" stroke-width="2"/>
                 </svg>
-                <div class="match-banner-name" id="banner-team-away">Alex V 2</div>
+                <div class="match-banner-name" id="banner-team-away">Alex V</div>
             </div>
 
         </div>
@@ -1394,6 +1405,7 @@ footer {
         setInterval(updateCountdown, 1000);
         attachCrests();
         buildTopScorers();
+        buildTopAssists();
         attachBannerCrests();
         attachCountdownCrests();
     });
@@ -1431,9 +1443,10 @@ footer {
         return found;
     }
 
-    function buildTopScorers() {
+    // Construieste un clasament (Golgheter sau Pase De Gol) din liste "Nume X. (numar)".
+    function buildRanking(selector, listId, totalId, singular, plural, totalLabel) {
         var totals = {};
-        document.querySelectorAll("#rezultate .scorers-list div").forEach(function(el) {
+        document.querySelectorAll(selector).forEach(function(el) {
             var m = el.textContent.trim().match(/^(.*?)\s*\((\d+)\)\s*$/);
             if (!m) return;
             var display = m[1].trim();
@@ -1444,13 +1457,14 @@ footer {
         var list = Object.keys(totals).map(function(k) { return totals[k]; });
         list.sort(function(a, b) { return b.goals - a.goals || a.name.localeCompare(b.name); });
 
-        var ol = document.getElementById("top-scorers");
+        var ol = document.getElementById(listId);
+        if (!ol) return;
         var sum = 0;
         ol.innerHTML = "";
         list.forEach(function(p, i) {
             sum += p.goals;
             var li = document.createElement("li");
-            li.innerHTML = '<span class="rank">' + (i + 1) + '</span><span class="pname"></span><span class="goals">' + p.goals + (p.goals === 1 ? ' gol' : ' goluri') + '</span>';
+            li.innerHTML = '<span class="rank">' + (i + 1) + '</span><span class="pname"></span><span class="goals">' + p.goals + (p.goals === 1 ? singular : plural) + '</span>';
             li.querySelector(".pname").textContent = p.name;
 
             var photoImg = findPlayerPhoto(p.name);
@@ -1475,12 +1489,34 @@ footer {
             }
             ol.appendChild(li);
         });
-        document.getElementById("top-scorers-total").textContent = "Total goluri marcate de jucători: " + sum;
+        document.getElementById(totalId).textContent = totalLabel + sum;
     }
 
+    // Golgheter: doar listele "Marcatori" (NU cele de pase de gol).
+    function buildTopScorers() {
+        buildRanking("#rezultate .scorers-list:not(.assists-list) div", "top-scorers", "top-scorers-total",
+            " gol", " goluri", "Total goluri marcate de jucători: ");
+    }
+
+    // Pase De Gol: doar listele "Pase De Gol" de la Rezultate (Seven Stars GALBEN).
+    function buildTopAssists() {
+        buildRanking("#rezultate .assists-list div", "top-assists", "top-assists-total",
+            " pasă", " pase", "Total pase de gol: ");
+    }
+
+    // Butonul cu data-list="g"/"a" deschide lista cu acelasi data-list din acelasi bloc
+    // (Marcatori / Pase De Gol). Blocurile vechi, fara data-list, deschid lista de dupa buton.
     function toggleScorers(btn) {
         btn.classList.toggle("open");
-        btn.nextElementSibling.classList.toggle("open");
+        var key = btn.getAttribute("data-list");
+        var list = null;
+        if (key) {
+            var wrap = btn.closest(".scorers");
+            list = wrap ? wrap.querySelector('.scorers-list[data-list="' + key + '"]') : null;
+        } else {
+            list = btn.nextElementSibling;
+        }
+        if (list) list.classList.toggle("open");
     }
 
     function togglePlayerPhoto(li) {
@@ -1549,12 +1585,17 @@ footer {
 <tr>
             <td data-label="Data">10.10.2026</td>
             <td data-label="Ora">13:30</td>
-            <td data-label="Meci">Seven Stars - Alex V 2
+            <td data-label="Meci">Seven Stars - Alex V
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>Rares O. (4)</div>
                         <div>Damian G. (2)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Denis C. (1)</div>
+                        <div>Rares O. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">6-3</td>
@@ -1573,12 +1614,19 @@ class="youtube-btn">
             <td data-label="Ora">12:40</td>
             <td data-label="Meci">Seven Stars - Arsenal Sp 1
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>Rares O. (4)</div>
                         <div>Denis C. (2)</div>
                         <div>David T. (2)</div>
                         <div>Patrick S. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Vlad D. (1)</div>
+                        <div>Denis C. (3)</div>
+                        <div>Patrick S. (3)</div>
+                        <div>Rares O. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">9-3</td>
@@ -1597,10 +1645,14 @@ class="youtube-btn">
             <td data-label="Ora">08:30</td>
             <td data-label="Meci">Seven Stars - Sporting Kids
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>Denis C. (1)</div>
                         <div>Damian G. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Patrick S. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">2-2</td>
@@ -1619,11 +1671,15 @@ class="youtube-btn">
             <td data-label="Ora">14:20</td>
             <td data-label="Meci">Seven Stars - Partizan 1
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>David T. (2)</div>
                         <div>Damian G. (1)</div>
                         <div>Denis C. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Vlad D. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">4-1</td>
@@ -1647,13 +1703,21 @@ class="youtube-btn">
             <td data-label="Ora">09:30</td>
             <td data-label="Meci">Seven Stars - Galactik
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>Rares O. (2)</div>
                         <div>David T. (2)</div>
                         <div>Marco N. (1)</div>
                         <div>Vlad D. (2)</div>
                         <div>Denis C. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Denis C. (1)</div>
+                        <div>Marco N. (1)</div>
+                        <div>Alex T. (1)</div>
+                        <div>Rares O. (2)</div>
+                        <div>Vlad D. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">8-6</td>
@@ -1674,9 +1738,13 @@ class="youtube-btn">
             <td data-label="Ora">15:30</td>
             <td data-label="Meci">Seven Stars - Sporting Kids 1
                 <div class="scorers">
-                    <button type="button" class="scorers-toggle" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <div class="scorers-list">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
                         <div>Marco N. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Denis C. (1)</div>
                     </div>
                 </div></td>
             <td data-label="Scor">1-6</td>
@@ -1876,6 +1944,15 @@ class="youtube-btn">
 
     <ol class="top-scorers" id="top-scorers"></ol>
     <div class="top-scorers-total" id="top-scorers-total"></div>
+
+</section>
+
+<section id="pase" class="toggle-section">
+
+    <h2>Pase De Gol</h2>
+
+    <ol class="top-scorers" id="top-assists"></ol>
+    <div class="top-scorers-total" id="top-assists-total"></div>
 
 </section>
 
