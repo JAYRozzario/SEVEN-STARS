@@ -1166,7 +1166,7 @@ footer {
             if (cells.length < 3) return;
             var dataStr = cells[0].textContent.trim();
             var oraStr = cells[1].textContent.trim();
-            var meciStr = cells[2].textContent.trim();
+            var meciStr = (cells[2].dataset.meci || cells[2].textContent).trim();
             var date = parseMatchDate(dataStr, oraStr);
             if (!date) return;
             matches.push({ date: date, meci: meciStr, dataStr: dataStr, oraStr: oraStr });
@@ -1216,7 +1216,7 @@ footer {
             var meciCell = cells[2].cloneNode(true);
             var extra = meciCell.querySelector(".scorers");
             if (extra) extra.parentNode.removeChild(extra);
-            var meci = meciCell.textContent.replace(/\s+/g, " ").trim();
+            var meci = (cells[2].dataset.meci || meciCell.textContent).replace(/\s+/g, " ").trim();
             var score = cells[3].textContent.trim();
             if (!meci || !score) return;
             if (!best || date > best.date) {
@@ -1238,11 +1238,64 @@ footer {
         }
     }
 
+    // Cand ora unui meci din "Meciuri Viitoare" a trecut si meciul nu are inca rand in
+    // "Rezultate Seven Stars Galben", il adauga acolo cu scorul "-" (fara cifre), iar bannerul
+    // "Ultimul rezultat" arata echipele cu "-" in mijloc. Cand scrii scorul real in tabelul
+    // Rezultate (pe aceeasi data), randul automat nu mai e creat. Intoarce true daca a adaugat ceva.
+    function normMeci(t) {
+        return t.replace(/\s+/g, " ").trim().toLowerCase();
+    }
+
+    function addPendingResults() {
+        var table = document.querySelector("#rezultate table");
+        if (!table) return false;
+        var byTime = {};
+        var byDayMeci = {};
+        table.querySelectorAll("tr").forEach(function(row) {
+            var c = row.querySelectorAll("td");
+            if (c.length < 4) return;
+            var d = parseMatchDate(c[0].textContent.trim(), c[1].textContent.trim());
+            if (!d) return;
+            var cell = c[2].cloneNode(true);
+            var extra = cell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
+            var meci = normMeci(c[2].dataset.meci || cell.textContent);
+            byTime[d.getTime()] = true;
+            byDayMeci[d.getFullYear() + "-" + d.getMonth() + "-" + d.getDate() + "|" + meci] = true;
+        });
+
+        var now = new Date();
+        var added = false;
+        getUpcomingMatches().forEach(function(m) {
+            if (m.date > now) return;
+            var dayKey = m.date.getFullYear() + "-" + m.date.getMonth() + "-" + m.date.getDate() + "|" + normMeci(m.meci);
+            if (byTime[m.date.getTime()] || byDayMeci[dayKey]) return;
+            var tr = table.insertRow(1);
+            tr.innerHTML = '<td data-label="Data"></td><td data-label="Ora"></td><td data-label="Meci"></td>' +
+                '<td data-label="Scor">-</td><td data-label="Status" class="pending">-</td><td data-label="LINK MECI"></td>';
+            tr.cells[0].textContent = pad2(m.date.getDate()) + "." + pad2(m.date.getMonth() + 1) + "." + m.date.getFullYear();
+            tr.cells[1].textContent = m.oraStr;
+            tr.cells[2].textContent = m.meci;
+            byTime[m.date.getTime()] = true;
+            byDayMeci[dayKey] = true;
+            added = true;
+        });
+        return added;
+    }
+
+    function refreshPendingResults() {
+        if (!addPendingResults()) return;
+        attachCrests();
+        applyLastResult();
+        attachBannerCrests();
+    }
+
     function updateCountdown() {
         var now = new Date();
         var diff = targetDate ? targetDate - now : -1;
 
         if (diff <= 0) {
+            refreshPendingResults();
             var next = pickNextMatch();
             var nextKey = next ? (next.dataStr + " " + next.oraStr + " " + next.meci) : "";
             if (next && nextKey !== currentMatchKey) {
@@ -1403,6 +1456,7 @@ footer {
             var extra = cell.querySelector(".scorers");
             if (extra) extra.parentNode.removeChild(extra);
             var text = cell.textContent.trim();
+            cell.dataset.meci = text;
             var parts = text.split(/\s-\s/);
             if (parts.length === 2) {
                 cell.innerHTML = '<span class="meci-value">' +
@@ -1418,6 +1472,7 @@ footer {
 
     document.addEventListener("DOMContentLoaded", function() {
         applyMatch(pickNextMatch());
+        addPendingResults();
         applyLastResult();
         updateCountdown();
         setInterval(updateCountdown, 1000);
