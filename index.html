@@ -674,6 +674,47 @@ th, td {
     padding: 3px 12px;
 }
 
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    max-width: 600px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 16px;
+    padding: 16px 10px;
+    text-align: center;
+}
+
+.stat-card .stat-num {
+    display: block;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: 1.1;
+    color: #000000;
+}
+
+.stat-card .stat-label {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #666666;
+}
+
+.stat-card.stat-win .stat-num { color: green; }
+.stat-card.stat-draw .stat-num { color: orange; }
+.stat-card.stat-loss .stat-num { color: red; }
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 .top-scorers-total {
     margin-top: 15px;
     color: #666666;
@@ -1026,6 +1067,7 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
+    <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica"><span class="nav-icon">📊</span> Statistică Seven Stars Galben</a>
     <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate Seven Stars Galben</a>
     <a href="#" onclick="toggleSection('negru'); return false;" id="nav-negru"><span class="nav-icon">⚫</span> Meciuri Seven Stars Negru</a>
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
@@ -1470,6 +1512,38 @@ footer {
         });
     }
 
+    // Statistica Seven Stars Galben: se calculeaza automat din tabelul Rezultate.
+    // Scorul e in ordinea echipelor din "Meci"; echipa noastra e cea care incepe cu "Seven Stars".
+    // Meciurile fara scor (ex. "-") nu se numara.
+    function buildStats() {
+        var st = { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0 };
+        document.querySelectorAll("#rezultate table tr").forEach(function(row) {
+            var c = row.querySelectorAll("td");
+            if (c.length < 4) return;
+            var sm = c[3].textContent.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+            if (!sm) return;
+            var cell = c[2].cloneNode(true);
+            var extra = cell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
+            var meci = (c[2].dataset.meci || cell.textContent).replace(/\s+/g, " ").trim();
+            var teams = meci.split(/\s-\s/);
+            if (teams.length !== 2) return;
+            var homeUs = /^seven stars/i.test(teams[0].trim());
+            var awayUs = /^seven stars/i.test(teams[1].trim());
+            if (homeUs === awayUs) return;
+            var a = parseInt(sm[1], 10), b = parseInt(sm[2], 10);
+            var gf = homeUs ? a : b, ga = homeUs ? b : a;
+            st.played++; st.gf += gf; st.ga += ga;
+            if (gf > ga) st.wins++; else if (gf === ga) st.draws++; else st.losses++;
+        });
+        document.getElementById("stat-played").textContent = st.played;
+        document.getElementById("stat-wins").textContent = st.wins;
+        document.getElementById("stat-draws").textContent = st.draws;
+        document.getElementById("stat-losses").textContent = st.losses;
+        document.getElementById("stat-gf").textContent = st.gf;
+        document.getElementById("stat-ga").textContent = st.ga;
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         applyMatch(pickNextMatch());
         addPendingResults();
@@ -1479,6 +1553,7 @@ footer {
         attachCrests();
         buildTopScorers();
         buildTopAssists();
+        buildStats();
         attachBannerCrests();
         attachCountdownCrests();
     });
@@ -2050,6 +2125,22 @@ class="youtube-btn">
 
     <ol class="top-scorers" id="top-assists"></ol>
     <div class="top-scorers-total" id="top-assists-total"></div>
+
+</section>
+
+<section id="statistica" class="toggle-section">
+
+    <h2>Statistică Seven Stars Galben</h2>
+
+    <div class="stats-grid">
+        <div class="stat-card"><span class="stat-num" id="stat-played">0</span><span class="stat-label">Meciuri jucate</span></div>
+        <div class="stat-card stat-win"><span class="stat-num" id="stat-wins">0</span><span class="stat-label">Victorii</span></div>
+        <div class="stat-card stat-draw"><span class="stat-num" id="stat-draws">0</span><span class="stat-label">Egaluri</span></div>
+        <div class="stat-card stat-loss"><span class="stat-num" id="stat-losses">0</span><span class="stat-label">Înfrângeri</span></div>
+        <div class="stat-card"><span class="stat-num" id="stat-gf">0</span><span class="stat-label">Goluri date</span></div>
+        <div class="stat-card"><span class="stat-num" id="stat-ga">0</span><span class="stat-label">Goluri primite</span></div>
+    </div>
+    <div class="top-scorers-total">Se calculează automat din Rezultate Seven Stars Galben (meciurile fără scor încă nu se numără).</div>
 
 </section>
 
