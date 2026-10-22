@@ -930,6 +930,169 @@ footer {
     }
 }
 
+/* Carusel rezultate (sub bannere) */
+.results-carousel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 20px 20px;
+}
+
+.results-carousel.empty {
+    display: none;
+}
+
+.rc-track {
+    flex: 1;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px 2px;
+}
+
+.rc-track::-webkit-scrollbar {
+    display: none;
+}
+
+.rc-arrow {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid #FFD700;
+    background: #000000;
+    color: #FFD700;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0 3px;
+}
+
+.rc-arrow:hover {
+    background: #FFD700;
+    color: #000000;
+}
+
+.rc-card {
+    flex: 0 0 auto;
+    width: 210px;
+    box-sizing: border-box;
+    scroll-snap-align: start;
+    background: linear-gradient(135deg, #1a1a1a, #000000);
+    border: 1px solid #333333;
+    border-radius: 12px;
+    padding: 12px 14px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.rc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+
+.rc-card:focus-visible {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
+
+.rc-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 24px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #cccccc;
+}
+
+.rc-play {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #FFD700;
+    color: #000000;
+    font-size: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 2px;
+    box-sizing: border-box;
+}
+
+.rc-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 28px;
+    font-size: 15px;
+}
+
+.rc-crest {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.rc-crest-ph {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #333333;
+    color: #FFD700;
+    font-size: 11px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rc-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rc-row.rc-us .rc-name {
+    color: #FFD700;
+    font-weight: bold;
+}
+
+.rc-score {
+    font-weight: bold;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.rc-row.rc-lose .rc-score {
+    color: #888888;
+    font-weight: normal;
+}
+
+@media (max-width: 768px) {
+    .results-carousel {
+        margin: 0 10px 15px;
+    }
+}
+
+@media (max-width: 600px) {
+    .rc-arrow {
+        display: none;
+    }
+}
+
 .countdown-section h3 {
     margin: 0 0 5px;
     font-size: 16px;
@@ -1180,6 +1343,12 @@ footer {
 
 </div>
 
+<div class="results-carousel empty" id="results-carousel">
+    <button type="button" class="rc-arrow" aria-label="Înapoi" onclick="scrollResults(-1)">&#8249;</button>
+    <div class="rc-track" id="results-track"></div>
+    <button type="button" class="rc-arrow" aria-label="Înainte" onclick="scrollResults(1)">&#8250;</button>
+</div>
+
 <script>
     // Citeste tabelul "Meciuri Viitoare" si gaseste automat primul meci cu
     // data/ora in viitor. Nu mai trebuie schimbata manual data tinta -
@@ -1330,6 +1499,7 @@ footer {
         attachCrests();
         applyLastResult();
         attachBannerCrests();
+        buildResultsCarousel();
     }
 
     function updateCountdown() {
@@ -1512,6 +1682,117 @@ footer {
         });
     }
 
+    // Caruselul de rezultate de sub bannere: se construieste automat din tabelul
+    // "Rezultate Seven Stars Galben" (cele mai recente 12 meciuri, cel mai nou primul).
+    // Meciurile fara scor inca ("-") apar cu "Scor in curand".
+    function scrollResults(dir) {
+        var track = document.getElementById("results-track");
+        if (track) track.scrollBy({ left: dir * 440, behavior: "smooth" });
+    }
+
+    function rcCrest(name) {
+        var file = crestFile(name);
+        var el;
+        if (file) {
+            el = document.createElement("img");
+            el.className = "rc-crest";
+            el.src = file;
+            el.alt = "";
+            el.loading = "lazy";
+        } else {
+            el = document.createElement("span");
+            el.className = "rc-crest-ph";
+            el.textContent = name.trim().charAt(0).toUpperCase();
+        }
+        return el;
+    }
+
+    function rcRow(name, goals, cls) {
+        var row = document.createElement("div");
+        row.className = "rc-row" + (/^seven stars/i.test(name) ? " rc-us" : "") + (cls ? " " + cls : "");
+        row.appendChild(rcCrest(name));
+        var n = document.createElement("span");
+        n.className = "rc-name";
+        n.textContent = name;
+        row.appendChild(n);
+        var g = document.createElement("span");
+        g.className = "rc-score";
+        g.textContent = goals;
+        row.appendChild(g);
+        return row;
+    }
+
+    function buildResultsCarousel() {
+        var wrap = document.getElementById("results-carousel");
+        var track = document.getElementById("results-track");
+        if (!wrap || !track) return;
+        var items = [];
+        document.querySelectorAll("#rezultate table tr").forEach(function(row) {
+            var c = row.querySelectorAll("td");
+            if (c.length < 4) return;
+            var date = parseMatchDate(c[0].textContent.trim(), c[1].textContent.trim());
+            if (!date) return;
+            var cell = c[2].cloneNode(true);
+            var extra = cell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
+            var meci = (c[2].dataset.meci || cell.textContent).replace(/\s+/g, " ").trim();
+            var teams = meci.split(/\s-\s/);
+            if (teams.length !== 2) return;
+            var sm = c[3].textContent.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+            var a = c[5] ? c[5].querySelector("a[href]") : null;
+            items.push({
+                date: date,
+                t1: teams[0].trim(),
+                t2: teams[1].trim(),
+                s1: sm ? parseInt(sm[1], 10) : null,
+                s2: sm ? parseInt(sm[2], 10) : null,
+                video: a ? a.getAttribute("href") : ""
+            });
+        });
+        items.sort(function(x, y) { return y.date - x.date; });
+        items = items.slice(0, 12);
+
+        track.innerHTML = "";
+        items.forEach(function(it) {
+            var card = document.createElement("div");
+            card.className = "rc-card";
+            card.setAttribute("role", "link");
+            card.tabIndex = 0;
+            card.title = "Vezi Rezultate Seven Stars Galben";
+            card.onclick = function() { openSection("rezultate"); };
+            card.onkeydown = function(e) { if (e.key === "Enter") openSection("rezultate"); };
+
+            var top = document.createElement("div");
+            top.className = "rc-top";
+            var st = document.createElement("span");
+            var d = pad2(it.date.getDate()) + "." + pad2(it.date.getMonth() + 1) + "." + it.date.getFullYear();
+            st.textContent = (it.s1 === null ? "Scor în curând" : "Final") + " • " + d;
+            top.appendChild(st);
+            if (it.video) {
+                var play = document.createElement("a");
+                play.className = "rc-play";
+                play.href = it.video;
+                play.target = "_blank";
+                play.rel = "noopener";
+                play.title = "Vezi video";
+                play.textContent = "▶";
+                play.onclick = function(e) { e.stopPropagation(); };
+                top.appendChild(play);
+            }
+            card.appendChild(top);
+
+            var c1 = "", c2 = "";
+            if (it.s1 !== null && it.s1 !== it.s2) {
+                c1 = it.s1 < it.s2 ? "rc-lose" : "";
+                c2 = it.s2 < it.s1 ? "rc-lose" : "";
+            }
+            card.appendChild(rcRow(it.t1, it.s1 === null ? "-" : it.s1, c1));
+            card.appendChild(rcRow(it.t2, it.s2 === null ? "-" : it.s2, c2));
+            track.appendChild(card);
+        });
+        wrap.classList.toggle("empty", items.length === 0);
+    }
+
     // Statistica Seven Stars Galben: se calculeaza automat din tabelul Rezultate.
     // Scorul e in ordinea echipelor din "Meci"; echipa noastra e cea care incepe cu "Seven Stars".
     // Meciurile fara scor (ex. "-") nu se numara.
@@ -1554,6 +1835,7 @@ footer {
         buildTopScorers();
         buildTopAssists();
         buildStats();
+        buildResultsCarousel();
         attachBannerCrests();
         attachCountdownCrests();
     });
