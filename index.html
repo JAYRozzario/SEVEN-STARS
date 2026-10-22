@@ -613,8 +613,8 @@ th, td {
     gap: 12px;
     background: #ffffff;
     border: 1px solid #dddddd;
-    border-radius: 30px;
-    padding: 10px 16px;
+    border-radius: 40px;
+    padding: 8px 12px 8px 8px;
     margin-bottom: 10px;
     font-size: 15px;
     font-weight: bold;
@@ -641,8 +641,45 @@ th, td {
 .top-scorers li .player-photo {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding-left: 40px;
-    margin-top: 4px;
+    padding-left: 60px;
+    margin: 4px 0 6px;
+}
+
+/* cerculet cu fata jucatorului (stil "stories") */
+.top-scorers .avatar {
+    width: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    border: 3px solid #FFD700;
+    border-radius: 50%;
+    padding: 2px;
+    background: #ffffff;
+    flex-shrink: 0;
+    display: block;
+    overflow: hidden;
+}
+
+.top-scorers .avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: 50% 0%;
+    transform: scale(1.8);
+    transform-origin: 50% 45%;
+}
+
+.top-scorers .avatar-initial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #000000;
+    color: #FFD700;
+    font-size: 16px;
 }
 
 .top-scorers .rank {
@@ -667,52 +704,19 @@ th, td {
     flex: 1;
 }
 
+/* cerculet cu numarul de goluri / pase de gol */
 .top-scorers .goals {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     background: #FFD700;
     color: #000000;
-    border-radius: 20px;
-    padding: 3px 12px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    max-width: 600px;
-}
-
-.stat-card {
-    background: #ffffff;
-    border: 1px solid #dddddd;
-    border-radius: 16px;
-    padding: 16px 10px;
-    text-align: center;
-}
-
-.stat-card .stat-num {
-    display: block;
-    font-size: 34px;
-    font-weight: bold;
-    line-height: 1.1;
-    color: #000000;
-}
-
-.stat-card .stat-label {
-    display: block;
-    margin-top: 6px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #666666;
-}
-
-.stat-card.stat-win .stat-num { color: green; }
-.stat-card.stat-draw .stat-num { color: orange; }
-.stat-card.stat-loss .stat-num { color: red; }
-
-@media (max-width: 480px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 900;
+    flex-shrink: 0;
 }
 
 .top-scorers-total {
@@ -930,169 +934,6 @@ footer {
     }
 }
 
-/* Carusel rezultate (sub bannere) */
-.results-carousel {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 0 20px 20px;
-}
-
-.results-carousel.empty {
-    display: none;
-}
-
-.rc-track {
-    flex: 1;
-    display: flex;
-    gap: 12px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 4px 2px;
-}
-
-.rc-track::-webkit-scrollbar {
-    display: none;
-}
-
-.rc-arrow {
-    flex: 0 0 auto;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    border: 2px solid #FFD700;
-    background: #000000;
-    color: #FFD700;
-    font-size: 20px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 0 3px;
-}
-
-.rc-arrow:hover {
-    background: #FFD700;
-    color: #000000;
-}
-
-.rc-card {
-    flex: 0 0 auto;
-    width: 210px;
-    box-sizing: border-box;
-    scroll-snap-align: start;
-    background: linear-gradient(135deg, #1a1a1a, #000000);
-    border: 1px solid #333333;
-    border-radius: 12px;
-    padding: 12px 14px;
-    color: #ffffff;
-    cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.rc-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
-}
-
-.rc-card:focus-visible {
-    outline: 3px solid #FFD700;
-    outline-offset: 2px;
-}
-
-.rc-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 24px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    color: #cccccc;
-}
-
-.rc-play {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #FFD700;
-    color: #000000;
-    font-size: 10px;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-left: 2px;
-    box-sizing: border-box;
-}
-
-.rc-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 28px;
-    font-size: 15px;
-}
-
-.rc-crest {
-    width: 22px;
-    height: 22px;
-    object-fit: contain;
-    flex-shrink: 0;
-}
-
-.rc-crest-ph {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #333333;
-    color: #FFD700;
-    font-size: 11px;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.rc-name {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.rc-row.rc-us .rc-name {
-    color: #FFD700;
-    font-weight: bold;
-}
-
-.rc-score {
-    font-weight: bold;
-    font-size: 16px;
-    color: #ffffff;
-}
-
-.rc-row.rc-lose .rc-score {
-    color: #888888;
-    font-weight: normal;
-}
-
-@media (max-width: 768px) {
-    .results-carousel {
-        margin: 0 10px 15px;
-    }
-}
-
-@media (max-width: 600px) {
-    .rc-arrow {
-        display: none;
-    }
-}
-
 .countdown-section h3 {
     margin: 0 0 5px;
     font-size: 16px;
@@ -1230,7 +1071,6 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
-    <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica"><span class="nav-icon">📊</span> Statistică Seven Stars Galben</a>
     <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate Seven Stars Galben</a>
     <a href="#" onclick="toggleSection('negru'); return false;" id="nav-negru"><span class="nav-icon">⚫</span> Meciuri Seven Stars Negru</a>
     <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
@@ -1341,12 +1181,6 @@ footer {
         <div class="match-banner-date" id="banner-match-date">10.10.2026 &bull; 13:30</div>
     </div>
 
-</div>
-
-<div class="results-carousel empty" id="results-carousel">
-    <button type="button" class="rc-arrow" aria-label="Înapoi" onclick="scrollResults(-1)">&#8249;</button>
-    <div class="rc-track" id="results-track"></div>
-    <button type="button" class="rc-arrow" aria-label="Înainte" onclick="scrollResults(1)">&#8250;</button>
 </div>
 
 <script>
@@ -1499,7 +1333,6 @@ footer {
         attachCrests();
         applyLastResult();
         attachBannerCrests();
-        buildResultsCarousel();
     }
 
     function updateCountdown() {
@@ -1682,149 +1515,6 @@ footer {
         });
     }
 
-    // Caruselul de rezultate de sub bannere: se construieste automat din tabelul
-    // "Rezultate Seven Stars Galben" (cele mai recente 12 meciuri, cel mai nou primul).
-    // Meciurile fara scor inca ("-") apar cu "Scor in curand".
-    function scrollResults(dir) {
-        var track = document.getElementById("results-track");
-        if (track) track.scrollBy({ left: dir * 440, behavior: "smooth" });
-    }
-
-    function rcCrest(name) {
-        var file = crestFile(name);
-        var el;
-        if (file) {
-            el = document.createElement("img");
-            el.className = "rc-crest";
-            el.src = file;
-            el.alt = "";
-            el.loading = "lazy";
-        } else {
-            el = document.createElement("span");
-            el.className = "rc-crest-ph";
-            el.textContent = name.trim().charAt(0).toUpperCase();
-        }
-        return el;
-    }
-
-    function rcRow(name, goals, cls) {
-        var row = document.createElement("div");
-        row.className = "rc-row" + (/^seven stars/i.test(name) ? " rc-us" : "") + (cls ? " " + cls : "");
-        row.appendChild(rcCrest(name));
-        var n = document.createElement("span");
-        n.className = "rc-name";
-        n.textContent = name;
-        row.appendChild(n);
-        var g = document.createElement("span");
-        g.className = "rc-score";
-        g.textContent = goals;
-        row.appendChild(g);
-        return row;
-    }
-
-    function buildResultsCarousel() {
-        var wrap = document.getElementById("results-carousel");
-        var track = document.getElementById("results-track");
-        if (!wrap || !track) return;
-        var items = [];
-        document.querySelectorAll("#rezultate table tr").forEach(function(row) {
-            var c = row.querySelectorAll("td");
-            if (c.length < 4) return;
-            var date = parseMatchDate(c[0].textContent.trim(), c[1].textContent.trim());
-            if (!date) return;
-            var cell = c[2].cloneNode(true);
-            var extra = cell.querySelector(".scorers");
-            if (extra) extra.parentNode.removeChild(extra);
-            var meci = (c[2].dataset.meci || cell.textContent).replace(/\s+/g, " ").trim();
-            var teams = meci.split(/\s-\s/);
-            if (teams.length !== 2) return;
-            var sm = c[3].textContent.trim().match(/^(\d+)\s*-\s*(\d+)$/);
-            var a = c[5] ? c[5].querySelector("a[href]") : null;
-            items.push({
-                date: date,
-                t1: teams[0].trim(),
-                t2: teams[1].trim(),
-                s1: sm ? parseInt(sm[1], 10) : null,
-                s2: sm ? parseInt(sm[2], 10) : null,
-                video: a ? a.getAttribute("href") : ""
-            });
-        });
-        items.sort(function(x, y) { return y.date - x.date; });
-        items = items.slice(0, 12);
-
-        track.innerHTML = "";
-        items.forEach(function(it) {
-            var card = document.createElement("div");
-            card.className = "rc-card";
-            card.setAttribute("role", "link");
-            card.tabIndex = 0;
-            card.title = "Vezi Rezultate Seven Stars Galben";
-            card.onclick = function() { openSection("rezultate"); };
-            card.onkeydown = function(e) { if (e.key === "Enter") openSection("rezultate"); };
-
-            var top = document.createElement("div");
-            top.className = "rc-top";
-            var st = document.createElement("span");
-            var d = pad2(it.date.getDate()) + "." + pad2(it.date.getMonth() + 1) + "." + it.date.getFullYear();
-            st.textContent = (it.s1 === null ? "Scor în curând" : "Final") + " • " + d;
-            top.appendChild(st);
-            if (it.video) {
-                var play = document.createElement("a");
-                play.className = "rc-play";
-                play.href = it.video;
-                play.target = "_blank";
-                play.rel = "noopener";
-                play.title = "Vezi video";
-                play.textContent = "▶";
-                play.onclick = function(e) { e.stopPropagation(); };
-                top.appendChild(play);
-            }
-            card.appendChild(top);
-
-            var c1 = "", c2 = "";
-            if (it.s1 !== null && it.s1 !== it.s2) {
-                c1 = it.s1 < it.s2 ? "rc-lose" : "";
-                c2 = it.s2 < it.s1 ? "rc-lose" : "";
-            }
-            card.appendChild(rcRow(it.t1, it.s1 === null ? "-" : it.s1, c1));
-            card.appendChild(rcRow(it.t2, it.s2 === null ? "-" : it.s2, c2));
-            track.appendChild(card);
-        });
-        wrap.classList.toggle("empty", items.length === 0);
-    }
-
-    // Statistica Seven Stars Galben: se calculeaza automat din tabelul Rezultate.
-    // Scorul e in ordinea echipelor din "Meci"; echipa noastra e cea care incepe cu "Seven Stars".
-    // Meciurile fara scor (ex. "-") nu se numara.
-    function buildStats() {
-        var st = { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0 };
-        document.querySelectorAll("#rezultate table tr").forEach(function(row) {
-            var c = row.querySelectorAll("td");
-            if (c.length < 4) return;
-            var sm = c[3].textContent.trim().match(/^(\d+)\s*-\s*(\d+)$/);
-            if (!sm) return;
-            var cell = c[2].cloneNode(true);
-            var extra = cell.querySelector(".scorers");
-            if (extra) extra.parentNode.removeChild(extra);
-            var meci = (c[2].dataset.meci || cell.textContent).replace(/\s+/g, " ").trim();
-            var teams = meci.split(/\s-\s/);
-            if (teams.length !== 2) return;
-            var homeUs = /^seven stars/i.test(teams[0].trim());
-            var awayUs = /^seven stars/i.test(teams[1].trim());
-            if (homeUs === awayUs) return;
-            var a = parseInt(sm[1], 10), b = parseInt(sm[2], 10);
-            var gf = homeUs ? a : b, ga = homeUs ? b : a;
-            st.played++; st.gf += gf; st.ga += ga;
-            if (gf > ga) st.wins++; else if (gf === ga) st.draws++; else st.losses++;
-        });
-        document.getElementById("stat-played").textContent = st.played;
-        document.getElementById("stat-wins").textContent = st.wins;
-        document.getElementById("stat-draws").textContent = st.draws;
-        document.getElementById("stat-losses").textContent = st.losses;
-        document.getElementById("stat-gf").textContent = st.gf;
-        document.getElementById("stat-ga").textContent = st.ga;
-    }
-
     document.addEventListener("DOMContentLoaded", function() {
         applyMatch(pickNextMatch());
         addPendingResults();
@@ -1834,8 +1524,6 @@ footer {
         attachCrests();
         buildTopScorers();
         buildTopAssists();
-        buildStats();
-        buildResultsCarousel();
         attachBannerCrests();
         attachCountdownCrests();
     });
@@ -1894,16 +1582,29 @@ footer {
         list.forEach(function(p, i) {
             sum += p.goals;
             var li = document.createElement("li");
-            li.innerHTML = '<span class="rank">' + (i + 1) + '</span><span class="pname"></span><span class="goals">' + p.goals + (p.goals === 1 ? singular : plural) + '</span>';
+            li.innerHTML = '<span class="avatar"></span><span class="pname"></span><span class="goals"></span>';
             li.querySelector(".pname").textContent = p.name;
+            var goalsEl = li.querySelector(".goals");
+            goalsEl.textContent = p.goals;
+            goalsEl.title = p.goals + (p.goals === 1 ? singular : plural);
+            goalsEl.setAttribute("aria-label", goalsEl.title.trim());
 
             var photoImg = findPlayerPhoto(p.name);
+            var avatar = li.querySelector(".avatar");
+            if (photoImg) {
+                var face = document.createElement("img");
+                face.src = photoImg.getAttribute("src");
+                face.alt = photoImg.getAttribute("alt") || p.name;
+                face.loading = "lazy";
+                avatar.appendChild(face);
+            } else {
+                var ini = document.createElement("span");
+                ini.className = "avatar-initial";
+                ini.textContent = p.name.trim().charAt(0).toUpperCase();
+                avatar.appendChild(ini);
+            }
             if (photoImg) {
                 li.classList.add("has-photo");
-                var cam = document.createElement("span");
-                cam.className = "cam";
-                cam.textContent = "\uD83D\uDCF7";
-                li.querySelector(".pname").appendChild(cam);
                 var box = document.createElement("div");
                 box.className = "player-photo";
                 var pimg = document.createElement("img");
@@ -2012,36 +1713,6 @@ footer {
             <th>Status</th>
             <th>Video</th>
         </tr>
-<tr>
-            <td data-label="Data">17.10.2026</td>
-            <td data-label="Ora">10:10</td>
-            <td data-label="Meci">Partizan - Seven Stars
-                <div class="scorers">
-                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
-                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
-                    <div class="scorers-list" data-list="g">
-                        <div>Rares O. (3)</div>
-                        <div>Denis C. (1)</div>
-                        <div>Patrick S. (1)</div>
-                        <div>Vlad D. (1)</div>
-                        <div>Damian G. (1)</div>
-                    </div>
-                    <div class="scorers-list assists-list" data-list="a">
-                        <div>Damian G. (3)</div>
-                        <div>Denis C. (1)</div>
-                    </div>
-                </div></td>
-            <td data-label="Scor">5-7</td>
-            <td data-label="Status" class="win">Victorie</td>
-            <td data-label="LINK MECI">
-                <a href="https://youtu.be/HEDeyjeTcT4"
-target="_blank"
-class="youtube-btn">
-▶ Video
-</a>
-            </td>
-        </tr>
-
 <tr>
             <td data-label="Data">10.10.2026</td>
             <td data-label="Ora">13:30</td>
@@ -2295,6 +1966,12 @@ class="youtube-btn">
         </tr>
 
         <tr>
+            <td data-label="Data">17.10.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Partizan - Seven Stars</td>
+        </tr>
+
+        <tr>
             <td data-label="Data">24.10.2026</td>
             <td data-label="Ora">11:50</td>
             <td data-label="Meci">Seven Stars - Sporting Kids</td>
@@ -2356,37 +2033,37 @@ class="youtube-btn">
 
     <ul class="team-list">
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Manescu Nectarie (P)
-            <div class="player-photo small"><img src="nectarie.webp" alt="Manescu Nectarie (P)" loading="lazy"></div>
+            <div class="player-photo small"><img src="Nectarie.webp" alt="Manescu Nectarie (P)" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Andrei Dobriceanu (P)
-            <div class="player-photo"><img src="dobriceanu.webp" alt="Andrei Dobriceanu (P)" loading="lazy"></div>
+            <div class="player-photo"><img src="Andrei.webp" alt="Andrei Dobriceanu (P)" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Patrick Scarlat
-            <div class="player-photo"><img src="patrick.webp" alt="Patrick Scarlat" loading="lazy"></div>
+            <div class="player-photo"><img src="Patrick.webp" alt="Patrick Scarlat" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Andrei Arhip
-            <div class="player-photo"><img src="andu.webp" alt="Andrei Arhip" loading="lazy"></div>
+            <div class="player-photo"><img src="Andu.webp" alt="Andrei Arhip" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Denis Constantin
-            <div class="player-photo"><img src="denis.webp" alt="Denis Constantin" loading="lazy"></div>
+            <div class="player-photo"><img src="Denis Constantin.webp" alt="Denis Constantin" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Gogea Damian
-            <div class="player-photo"><img src="damian.webp" alt="Gogea Damian" loading="lazy"></div>
+            <div class="player-photo"><img src="Damian.webp" alt="Gogea Damian" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Rares Olaru
-            <div class="player-photo"><img src="rares.webp" alt="Rares Olaru" loading="lazy"></div>
+            <div class="player-photo"><img src="Rares.webp" alt="Rares Olaru" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">David Tone
-            <div class="player-photo"><img src="david.webp" alt="David Tone" loading="lazy"></div>
+            <div class="player-photo"><img src="David.webp" alt="David Tone" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Marco Neagu
-            <div class="player-photo"><img src="marco.webp" alt="Marco Neagu" loading="lazy"></div>
+            <div class="player-photo"><img src="Marco.webp" alt="Marco Neagu" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Vlad Dorobat
-            <div class="player-photo"><img src="vlad.webp" alt="Vlad Dorobat" loading="lazy"></div>
+            <div class="player-photo"><img src="Vlad.webp" alt="Vlad Dorobat" loading="lazy"></div>
         </li>
         <li class="has-photo" onclick="togglePlayerPhoto(this)">Alex Teodor
-            <div class="player-photo"><img src="alex.webp" alt="Alex Teodor" loading="lazy"></div>
+            <div class="player-photo"><img src="Alex.webp" alt="Alex Teodor" loading="lazy"></div>
         </li>
     </ul>
 
@@ -2407,22 +2084,6 @@ class="youtube-btn">
 
     <ol class="top-scorers" id="top-assists"></ol>
     <div class="top-scorers-total" id="top-assists-total"></div>
-
-</section>
-
-<section id="statistica" class="toggle-section">
-
-    <h2>Statistică Seven Stars Galben</h2>
-
-    <div class="stats-grid">
-        <div class="stat-card"><span class="stat-num" id="stat-played">0</span><span class="stat-label">Meciuri jucate</span></div>
-        <div class="stat-card stat-win"><span class="stat-num" id="stat-wins">0</span><span class="stat-label">Victorii</span></div>
-        <div class="stat-card stat-draw"><span class="stat-num" id="stat-draws">0</span><span class="stat-label">Egaluri</span></div>
-        <div class="stat-card stat-loss"><span class="stat-num" id="stat-losses">0</span><span class="stat-label">Înfrângeri</span></div>
-        <div class="stat-card"><span class="stat-num" id="stat-gf">0</span><span class="stat-label">Goluri date</span></div>
-        <div class="stat-card"><span class="stat-num" id="stat-ga">0</span><span class="stat-label">Goluri primite</span></div>
-    </div>
-    <div class="top-scorers-total">Se calculează automat din Rezultate Seven Stars Galben (meciurile fără scor încă nu se numără).</div>
 
 </section>
 
