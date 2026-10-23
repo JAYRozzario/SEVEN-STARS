@@ -98,13 +98,15 @@ body {
     }
 }
 
-#viitoare table tr:nth-child(2) {
+#viitoare table tr:nth-child(2),
+#viitoare-negru table tr:nth-child(2) {
     animation: nextMatchPulse 1.6s ease-in-out infinite;
     font-weight: bold;
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #viitoare table tr:nth-child(2) {
+    #viitoare table tr:nth-child(2),
+    #viitoare-negru table tr:nth-child(2) {
         animation: none;
         background-color: #fff3b0;
     }
@@ -391,12 +393,13 @@ h2 {
 }
 
 /* Golgheter / Pase De Gol: poza micuta cat textul, in locul liniei galbene */
-#golgheter h2, #pase h2 {
+#statistica h2.stat-sub {
     border-left: none;
     padding-left: 0;
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-top: 30px;
 }
 
 .h2-icon {
@@ -1300,13 +1303,12 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
-    <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica"><span class="nav-icon">📊</span> Statistică Seven Stars Galben</a>
-    <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate Seven Stars Galben</a>
-    <a href="#" onclick="toggleSection('negru'); return false;" id="nav-negru"><span class="nav-icon">⚫</span> Meciuri Seven Stars Negru</a>
-    <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
     <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa"><span class="nav-icon">👥</span> Echipa</a>
-    <a href="#" onclick="toggleSection('golgheter'); return false;" id="nav-golgheter"><span class="nav-icon">👟</span> Golgheter</a>
-    <a href="#" onclick="toggleSection('pase'); return false;" id="nav-pase"><span class="nav-icon">🎯</span> Pase De Gol</a>
+    <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate"><span class="nav-icon">🏆</span> Rezultate Seven Stars Galben</a>
+    <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica"><span class="nav-icon">📊</span> Statistică Seven Stars Galben</a>
+    <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare"><span class="nav-icon">📅</span> Meciuri Viitoare Seven Stars Galben</a>
+    <a href="#" onclick="toggleSection('negru'); return false;" id="nav-negru"><span class="nav-icon">⚫</span> Meciuri Seven Stars Negru</a>
+    <a href="#" onclick="toggleSection('viitoare-negru'); return false;" id="nav-viitoare-negru"><span class="nav-icon">📅</span> Meciuri Viitoare Seven Stars Negru</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -2102,7 +2104,7 @@ footer {
             section.classList.add("open");
             navBtn.classList.add("active");
             section.scrollIntoView({ behavior: "smooth", block: "start" });
-            if (id === "golgheter" || id === "pase") {
+            if (id === "statistica") {
                 playRankRoll(section);
             }
         }
@@ -2393,9 +2395,77 @@ class="youtube-btn">
 
 </section>
 
+<section id="viitoare-negru" class="toggle-section">
+
+    <!-- Seven Stars NEGRU = "Seven Stars Junior 1" in calendarul AMFB (2018 Albastru).
+         Seven Stars GALBEN = "Seven Stars Junior 2". Countdown-ul de pe prima pagina
+         citeste doar tabelul din #viitoare (Galben), nu si acest tabel. -->
+
+    <h2>Meciuri Viitoare Seven Stars Negru</h2>
+
+    <table>
+
+        <tr>
+            <th>Data</th>
+            <th>Ora</th>
+            <th>Meci</th>
+        </tr>
+
+        <tr>
+            <td data-label="Data">24.10.2026</td>
+            <td data-label="Ora">13:30</td>
+            <td data-label="Meci">Arsenal Sp 2 - Seven Stars Negru</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">31.10.2026</td>
+            <td data-label="Ora">12:40</td>
+            <td data-label="Meci">Seven Stars Negru - ACP 3 Kids</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">7.11.2026</td>
+            <td data-label="Ora">11:00</td>
+            <td data-label="Meci">Super Star Junior 1 - Seven Stars Negru</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">14.11.2026</td>
+            <td data-label="Ora">8:30</td>
+            <td data-label="Meci">Seven Stars Negru - Sporting Kids 1</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">21.11.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Seven Stars Galben - Seven Stars Negru</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">28.11.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Seven Stars Negru - Alex V 1</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">5.12.2026</td>
+            <td data-label="Ora">11:50</td>
+            <td data-label="Meci">Luc Buc - Seven Stars Negru</td>
+        </tr>
+
+        <tr>
+            <td data-label="Data">12.12.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Seven Stars Negru - Arsenal Sp 1</td>
+        </tr>
+
+    </table>
+
+</section>
+
 <section id="viitoare" class="toggle-section">
 
-    <h2>Meciuri Viitoare</h2>
+    <h2>Meciuri Viitoare Seven Stars Galben</h2>
 
     <table>
 
@@ -2503,24 +2573,6 @@ class="youtube-btn">
 
 </section>
 
-<section id="golgheter" class="toggle-section">
-
-    <h2><img class="h2-icon" src="poza19.jpeg" alt="">Golgheter</h2>
-
-    <ol class="top-scorers" id="top-scorers"></ol>
-    <div class="top-scorers-total" id="top-scorers-total"></div>
-
-</section>
-
-<section id="pase" class="toggle-section">
-
-    <h2><img class="h2-icon" src="poza7.jpeg" alt="">Pase De Gol</h2>
-
-    <ol class="top-scorers" id="top-assists"></ol>
-    <div class="top-scorers-total" id="top-assists-total"></div>
-
-</section>
-
 <section id="statistica" class="toggle-section">
 
     <h2>Statistică Seven Stars Galben</h2>
@@ -2534,6 +2586,16 @@ class="youtube-btn">
         <div class="stat-card"><span class="stat-num" id="stat-ga">0</span><span class="stat-label">Goluri primite</span></div>
     </div>
     <div class="top-scorers-total">Se calculează automat din Rezultate Seven Stars Galben (meciurile fără scor încă nu se numără).</div>
+
+    <h2 class="stat-sub"><img class="h2-icon" src="poza19.jpeg" alt="">Golgheter</h2>
+
+    <ol class="top-scorers" id="top-scorers"></ol>
+    <div class="top-scorers-total" id="top-scorers-total"></div>
+
+    <h2 class="stat-sub"><img class="h2-icon" src="poza7.jpeg" alt="">Pase De Gol</h2>
+
+    <ol class="top-scorers" id="top-assists"></ol>
+    <div class="top-scorers-total" id="top-assists-total"></div>
 
 </section>
 
