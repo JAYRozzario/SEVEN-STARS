@@ -641,14 +641,16 @@ th, td {
 .top-scorers li .player-photo {
     flex: 0 0 100%;
     box-sizing: border-box;
-    padding-left: 60px;
+    padding-left: 76px;
     margin: 4px 0 6px;
 }
 
 /* cerculet cu fata jucatorului (stil "stories") */
 .top-scorers .avatar {
-    width: 48px;
-    height: 48px;
+    position: relative;
+    z-index: 2;
+    width: 64px;
+    height: 64px;
     box-sizing: border-box;
     border: 3px solid #FFD700;
     border-radius: 50%;
@@ -679,7 +681,7 @@ th, td {
     border-radius: 50%;
     background: #000000;
     color: #FFD700;
-    font-size: 16px;
+    font-size: 22px;
 }
 
 .top-scorers .rank {
@@ -717,6 +719,29 @@ th, td {
     font-size: 18px;
     font-weight: 900;
     flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Cand se deschide categoria: cercul cu numarul porneste de sub poza
+   si se rostogoleste spre dreapta pana la locul lui. */
+@keyframes rankRoll {
+    from {
+        transform: translateX(calc(-1 * var(--roll-x, 0px))) rotate(calc(-1 * var(--roll-rot, 0deg)));
+    }
+    to {
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
+.top-scorers .goals.roll {
+    animation: rankRoll 1.5s cubic-bezier(0.2, 0.7, 0.25, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-scorers .goals.roll {
+        animation: none;
+    }
 }
 
 .stats-grid {
@@ -2036,6 +2061,31 @@ footer {
         }
     }
 
+    // Golgheter / Pase De Gol: cercul cu numarul iese de sub poza copilului
+    // si se rostogoleste spre dreapta, rand dupa rand.
+    function playRankRoll(section) {
+        var rows = section.querySelectorAll(".top-scorers li");
+        rows.forEach(function(li) {
+            var g = li.querySelector(".goals");
+            if (g) g.classList.remove("roll");
+        });
+        void section.offsetWidth;
+        rows.forEach(function(li, i) {
+            var g = li.querySelector(".goals");
+            var av = li.querySelector(".avatar");
+            if (!g || !av) return;
+            var gr = g.getBoundingClientRect();
+            var ar = av.getBoundingClientRect();
+            var dist = (gr.left + gr.width / 2) - (ar.left + ar.width / 2);
+            if (dist <= 0) return;
+            var turns = dist / (Math.PI * gr.width);
+            g.style.setProperty("--roll-x", dist + "px");
+            g.style.setProperty("--roll-rot", (turns * 360) + "deg");
+            g.style.animationDelay = (0.3 + i * 0.12) + "s";
+            g.classList.add("roll");
+        });
+    }
+
     function toggleSection(id) {
         var section = document.getElementById(id);
         var navBtn = document.getElementById("nav-" + id);
@@ -2052,6 +2102,9 @@ footer {
             section.classList.add("open");
             navBtn.classList.add("active");
             section.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (id === "golgheter" || id === "pase") {
+                playRankRoll(section);
+            }
         }
     }
 </script>
