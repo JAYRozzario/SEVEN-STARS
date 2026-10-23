@@ -1359,6 +1359,161 @@ footer {
     }
 }
 
+
+/* ===== Prima pagina: stanga = 2 bannere compacte unul sub altul, dreapta = Urmatorul meci Negru ===== */
+.hero-left {
+    flex: 1;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.hero-left > .countdown-section,
+.hero-left > .match-banner {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.neg-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Urmatorul meci - varianta compacta */
+.countdown-section.compact {
+    padding: 8px 12px;
+}
+
+.compact h3 {
+    margin: 0 0 2px;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.cp-line {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.compact .countdown-match {
+    font-size: 14px;
+    margin: 0;
+}
+
+.compact .countdown-date {
+    font-size: 12px;
+    margin: 0;
+}
+
+.compact .countdown-row {
+    gap: 8px;
+}
+
+.compact .countdown-crest {
+    width: 40px;
+    height: 40px;
+    padding: 3px;
+}
+
+.compact .countdown-timer {
+    gap: 6px;
+}
+
+.compact .countdown-box {
+    min-width: 46px;
+    padding: 3px 6px;
+    border-radius: 6px;
+}
+
+.compact .countdown-number {
+    font-size: 19px;
+    line-height: 1.15;
+}
+
+.compact .countdown-label {
+    font-size: 8px;
+}
+
+/* Ultimul rezultat - varianta compacta */
+.match-banner.compact {
+    padding: 8px 12px;
+}
+
+.compact .match-banner-label {
+    font-size: 11px;
+    margin: 0;
+}
+
+.cp-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.compact .match-banner-date {
+    margin: 0;
+    font-size: 12px;
+}
+
+.compact .match-banner-teams {
+    gap: 10px;
+}
+
+.compact .mb-team {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+}
+
+.compact .mb-team.away {
+    flex-direction: row-reverse;
+}
+
+.compact .player-silhouette {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+}
+
+.compact .banner-crest {
+    padding: 3px;
+    box-shadow: 0 0 0 2px #FFD700;
+}
+
+.compact .match-banner-name {
+    margin: 0;
+    max-width: 130px;
+    font-size: 14px;
+}
+
+.compact .match-banner-score {
+    min-width: 46px;
+    padding: 4px 10px;
+    font-size: 18px;
+}
+
+@media (max-width: 768px) {
+    .hero-left { flex-basis: 100%; }
+    .compact .countdown-crest { width: 32px; height: 32px; padding: 2px; }
+    .compact .countdown-box { min-width: 36px; padding: 3px 3px; }
+    .compact .countdown-number { font-size: 16px; }
+    .compact .player-silhouette { width: 32px; height: 32px; }
+    .compact .match-banner-name { font-size: 12px; max-width: 80px; }
+    .compact .match-banner-score { min-width: 40px; padding: 3px 8px; font-size: 16px; }
+    .compact .mb-team { gap: 4px; }
+    .compact .match-banner-teams { gap: 6px; }
+}
 </style>
 </head>
 <body>
@@ -1390,13 +1545,17 @@ footer {
 
 <div class="hero-row">
 
-    <div class="countdown-section hero-link" role="link" tabindex="0" title="Vezi Meciuri Viitoare"
+    <div class="hero-left">
+
+    <div class="countdown-section hero-link compact" role="link" tabindex="0" title="Vezi Meciuri Viitoare"
          onclick="openSection('viitoare')" onkeydown="if(event.key==='Enter'){openSection('viitoare');}">
         <div class="card-slides" id="countdown-slides"></div>
         <div class="card-overlay"></div>
         <h3>Următorul meci</h3>
-        <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V</div>
-        <div class="countdown-date" id="countdown-match-date"></div>
+        <div class="cp-line">
+            <div class="countdown-match" id="countdown-match-name">Seven Stars - Alex V</div>
+            <div class="countdown-date" id="countdown-match-date"></div>
+        </div>
         <div class="countdown-row">
             <img class="countdown-crest" id="countdown-crest-home" src="" alt="">
             <div class="countdown-timer">
@@ -1421,14 +1580,17 @@ footer {
         </div>
     </div>
 
-    <div class="match-banner hero-link" role="link" tabindex="0" title="Vezi Rezultate Seven Stars Galben"
+    <div class="match-banner hero-link compact" role="link" tabindex="0" title="Vezi Rezultate Seven Stars Galben"
          onclick="openSection('rezultate')" onkeydown="if(event.key==='Enter'){openSection('rezultate');}">
         <div class="card-slides" id="banner-slides"></div>
         <div class="card-overlay"></div>
-        <div class="match-banner-label">Ultimul rezultat</div>
+        <div class="cp-head">
+            <div class="match-banner-label">Ultimul rezultat</div>
+            <div class="match-banner-date" id="banner-match-date">10.10.2026 &bull; 13:30</div>
+        </div>
         <div class="match-banner-teams">
 
-            <div>
+            <div class="mb-team home">
                 <svg class="player-silhouette" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <clipPath id="jerseyClipHome">
@@ -1451,7 +1613,7 @@ footer {
 
             <div class="match-banner-vs match-banner-score" id="banner-score">VS</div>
 
-            <div>
+            <div class="mb-team away">
                 <svg class="player-silhouette" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <clipPath id="jerseyClipAway">
@@ -1473,7 +1635,39 @@ footer {
             </div>
 
         </div>
-        <div class="match-banner-date" id="banner-match-date">10.10.2026 &bull; 13:30</div>
+    </div>
+
+    </div>
+
+    <div class="countdown-section hero-link neg-banner" role="link" tabindex="0" title="Vezi Meciuri Viitoare Seven Stars Negru"
+         onclick="openSection('viitoare-negru')" onkeydown="if(event.key==='Enter'){openSection('viitoare-negru');}">
+        <div class="card-slides" id="neg-countdown-slides"></div>
+        <div class="card-overlay"></div>
+        <h3>Următorul meci Seven Stars Negru</h3>
+        <div class="countdown-match" id="neg-countdown-match-name">Arsenal Sp 2 - Seven Stars Negru</div>
+        <div class="countdown-date" id="neg-countdown-match-date"></div>
+        <div class="countdown-row">
+            <img class="countdown-crest" id="neg-countdown-crest-home" src="" alt="">
+            <div class="countdown-timer">
+                <div class="countdown-box">
+                    <span class="countdown-number" id="neg-countdown-days">00</span>
+                    <span class="countdown-label">Zile</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="neg-countdown-hours">00</span>
+                    <span class="countdown-label">Ore</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="neg-countdown-minutes">00</span>
+                    <span class="countdown-label">Minute</span>
+                </div>
+                <div class="countdown-box">
+                    <span class="countdown-number" id="neg-countdown-seconds">00</span>
+                    <span class="countdown-label">Secunde</span>
+                </div>
+            </div>
+            <img class="countdown-crest" id="neg-countdown-crest-away" src="" alt="">
+        </div>
     </div>
 
 </div>
@@ -1504,8 +1698,8 @@ footer {
         return isNaN(d.getTime()) ? null : d;
     }
 
-    function getUpcomingMatches() {
-        var rows = document.querySelectorAll("#viitoare table tr");
+    function getUpcomingMatches(sel) {
+        var rows = document.querySelectorAll((sel || "#viitoare") + " table tr");
         var matches = [];
         rows.forEach(function(row) {
             var cells = row.querySelectorAll("td");
@@ -1521,9 +1715,9 @@ footer {
         return matches;
     }
 
-    function pickNextMatch() {
+    function pickNextMatch(sel) {
         var now = new Date();
-        var matches = getUpcomingMatches();
+        var matches = getUpcomingMatches(sel);
         for (var i = 0; i < matches.length; i++) {
             if (matches[i].date > now) return matches[i];
         }
@@ -1668,6 +1862,68 @@ footer {
         document.getElementById("countdown-hours").textContent = String(hours).padStart(2, "0");
         document.getElementById("countdown-minutes").textContent = String(minutes).padStart(2, "0");
         document.getElementById("countdown-seconds").textContent = String(seconds).padStart(2, "0");
+    }
+
+    // ===== Urmatorul meci Seven Stars NEGRU (bannerul din dreapta) =====
+    // Citeste tabelul "Meciuri Viitoare Seven Stars Negru" (#viitoare-negru), la fel ca
+    // bannerul Galben citeste #viitoare. Nu adauga rezultate automate in tabelul Negru.
+    var targetDateNeg = null;
+    var currentMatchKeyNeg = "";
+
+    function applyMatchNeg(match) {
+        if (!match) return;
+        targetDateNeg = match.date;
+        currentMatchKeyNeg = match.dataStr + " " + match.oraStr + " " + match.meci;
+        document.getElementById("neg-countdown-match-name").textContent = match.meci;
+        document.getElementById("neg-countdown-match-date").textContent = formatMatchDate(match.date);
+    }
+
+    function attachCountdownCrestsNeg() {
+        var nameEl = document.getElementById("neg-countdown-match-name");
+        if (!nameEl) return;
+        var parts = nameEl.textContent.trim().split(/\s-\s/);
+        if (parts.length !== 2) return;
+        [["home", parts[0]], ["away", parts[1]]].forEach(function(pair) {
+            var file = crestFile(pair[1]);
+            var img = document.getElementById("neg-countdown-crest-" + pair[0]);
+            if (file && img) {
+                img.src = file;
+                img.alt = pair[1].trim();
+                img.style.display = "block";
+                flyInCrest(img, pair[0] === "home" ? 0.4 : 0.9);
+            }
+        });
+    }
+
+    function updateCountdownNeg() {
+        var now = new Date();
+        var diff = targetDateNeg ? targetDateNeg - now : -1;
+
+        if (diff <= 0) {
+            var next = pickNextMatch("#viitoare-negru");
+            var nextKey = next ? (next.dataStr + " " + next.oraStr + " " + next.meci) : "";
+            if (next && nextKey !== currentMatchKeyNeg) {
+                applyMatchNeg(next);
+                attachCountdownCrestsNeg();
+                diff = targetDateNeg - now;
+            } else {
+                document.getElementById("neg-countdown-match-name").textContent = "Meciul a început!";
+                ["days", "hours", "minutes", "seconds"].forEach(function(k) {
+                    document.getElementById("neg-countdown-" + k).textContent = "00";
+                });
+                return;
+            }
+        }
+
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById("neg-countdown-days").textContent = String(days).padStart(2, "0");
+        document.getElementById("neg-countdown-hours").textContent = String(hours).padStart(2, "0");
+        document.getElementById("neg-countdown-minutes").textContent = String(minutes).padStart(2, "0");
+        document.getElementById("neg-countdown-seconds").textContent = String(seconds).padStart(2, "0");
     }
 
     var galleryImages = [];
@@ -1967,6 +2223,9 @@ footer {
         applyLastResult();
         updateCountdown();
         setInterval(updateCountdown, 1000);
+        applyMatchNeg(pickNextMatch("#viitoare-negru"));
+        updateCountdownNeg();
+        setInterval(updateCountdownNeg, 1000);
         attachCrests();
         buildTopScorers();
         buildTopAssists();
@@ -1974,6 +2233,7 @@ footer {
         buildResultsCarousel();
         attachBannerCrests();
         attachCountdownCrests();
+        attachCountdownCrestsNeg();
     });
 
     // Top marcatori: se calculeaza automat din blocurile "Marcatori" de la Rezultate.
@@ -2732,7 +2992,8 @@ class="youtube-btn">
     var BACKGROUNDS = [
         { id: "header-slides",    src: "poza23.jpeg" },
         { id: "countdown-slides", src: "poza36.webp" },
-        { id: "banner-slides",    src: "poza3.jpeg" }
+        { id: "banner-slides",    src: "poza3.jpeg" },
+        { id: "neg-countdown-slides", src: "poza3.jpeg" }
     ];
 
     var slides = [];
