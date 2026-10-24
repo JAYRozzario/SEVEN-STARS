@@ -1605,7 +1605,19 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .hero-left { flex-basis: 100%; }
+    .hero-left {
+        flex-basis: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: 1fr;
+    }
+    .hero-left > .countdown-section.compact,
+    .hero-left > .match-banner.compact {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-sizing: border-box;
+    }
     .compact .countdown-crest { width: 32px; height: 32px; padding: 2px; }
     .compact .countdown-box { min-width: 36px; padding: 3px 3px; }
     .compact .countdown-number { font-size: 16px; }
@@ -1622,7 +1634,7 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home" class="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
-    <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa"><span class="nav-icon">👥</span> Echipa</a>
+    <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa" class="nav-home"><span class="nav-icon">👥</span> Echipa</a>
     <div class="nav-group" id="grp-galben">
         <a href="#" onclick="toggleNavGroup('galben'); return false;" id="nav-grp-galben" class="nav-galben nav-group-btn"><span class="nav-icon">🟡</span> Seven Stars Galben <span class="nav-caret">▼</span></a>
         <div class="nav-sub">
@@ -1638,7 +1650,7 @@ footer {
             <a href="#" onclick="toggleSection('viitoare-negru'); return false;" id="nav-viitoare-negru"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
         </div>
     </div>
-    <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie"><span class="nav-icon">🖼️</span> Galerie</a>
+    <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie" class="nav-home"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank" class="nav-amfb"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
 
