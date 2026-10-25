@@ -1638,8 +1638,29 @@ footer {
 }
 
 .hero-right > .neg-banner {
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
+}
+
+/* Desktop: toate cele 4 bannere au aceeasi structura si aceeasi inaltime (2 x 2) */
+.hero-row .countdown-section,
+.hero-row .match-banner,
+.hero-row .gallery-banner {
+    height: 100px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.hero-row .countdown-section.compact,
+.hero-row .match-banner.compact,
+.hero-row .gallery-banner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hero-row .gallery-banner {
+    align-items: center;
 }
 
 .gallery-banner {
@@ -1718,32 +1739,6 @@ footer {
     }
     .gallery-banner-icon { font-size: 26px; }
     .gallery-banner-title { font-size: 18px; }
-
-    /* Urmatorul meci Negru - aceeasi varianta compacta ca bannerele din stanga */
-    .neg-banner {
-        padding: 8px 12px;
-        justify-content: center;
-    }
-    .neg-banner h3 {
-        margin: 0 0 2px;
-        font-size: 11px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    .neg-banner .countdown-match {
-        font-size: 13px;
-        margin: 0;
-    }
-    .neg-banner .countdown-date {
-        font-size: 11px;
-        margin: 0 0 4px;
-    }
-    .neg-banner .countdown-row { gap: 8px; }
-    .neg-banner .countdown-crest { width: 32px; height: 32px; padding: 2px; }
-    .neg-banner .countdown-timer { gap: 6px; }
-    .neg-banner .countdown-box { min-width: 36px; padding: 3px 3px; }
-    .neg-banner .countdown-number { font-size: 16px; line-height: 1.15; }
-    .neg-banner .countdown-label { font-size: 8px; }
 }
 
 /* ===== Stiri (arhiva articole) ===== */
@@ -1827,6 +1822,7 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home" class="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
+    <a href="#" onclick="toggleSection('stiri'); return false;" id="nav-stiri" class="nav-home"><span class="nav-icon">📰</span> Știri</a>
     <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa" class="nav-home"><span class="nav-icon">👥</span> Echipa</a>
     <div class="nav-group" id="grp-galben">
         <a href="#" onclick="toggleNavGroup('galben'); return false;" id="nav-grp-galben" class="nav-galben nav-group-btn"><span class="nav-icon">🟡</span> Seven Stars Galben <span class="nav-caret">▼</span></a>
@@ -1843,7 +1839,6 @@ footer {
             <a href="#" onclick="toggleSection('viitoare-negru'); return false;" id="nav-viitoare-negru"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
         </div>
     </div>
-    <a href="#" onclick="toggleSection('stiri'); return false;" id="nav-stiri" class="nav-home"><span class="nav-icon">📰</span> Știri</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie" class="nav-home"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank" class="nav-amfb"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -1958,13 +1953,15 @@ footer {
 
     <div class="hero-right">
 
-    <div class="countdown-section hero-link neg-banner" role="link" tabindex="0" title="Vezi Meciuri Viitoare Seven Stars Negru"
+    <div class="countdown-section hero-link compact neg-banner" role="link" tabindex="0" title="Vezi Meciuri Viitoare Seven Stars Negru"
          onclick="openSection('viitoare-negru')" onkeydown="if(event.key==='Enter'){openSection('viitoare-negru');}">
         <div class="card-slides" id="neg-countdown-slides"></div>
         <div class="card-overlay"></div>
         <h3>Următorul meci Seven Stars Negru</h3>
-        <div class="countdown-match" id="neg-countdown-match-name">Arsenal Sp 2 - Seven Stars Negru</div>
-        <div class="countdown-date" id="neg-countdown-match-date"></div>
+        <div class="cp-line">
+            <div class="countdown-match" id="neg-countdown-match-name">Arsenal Sp 2 - Seven Stars Negru</div>
+            <div class="countdown-date" id="neg-countdown-match-date"></div>
+        </div>
         <div class="countdown-row">
             <img class="countdown-crest" id="neg-countdown-crest-home" src="" alt="">
             <div class="countdown-timer">
