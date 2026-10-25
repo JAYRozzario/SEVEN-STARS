@@ -1745,6 +1745,81 @@ footer {
     .neg-banner .countdown-number { font-size: 16px; line-height: 1.15; }
     .neg-banner .countdown-label { font-size: 8px; }
 }
+
+/* ===== Stiri (arhiva articole) ===== */
+.news-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 900px;
+}
+
+.news-item {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+.news-item summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 16px;
+    background: #000000;
+    color: #FFD700;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.news-item summary::-webkit-details-marker {
+    display: none;
+}
+
+.news-item summary::after {
+    content: "▼";
+    position: absolute;
+    top: 28px;
+    right: 16px;
+    font-size: 12px;
+}
+
+.news-item { position: relative; }
+
+.news-item[open] summary::after {
+    content: "▲";
+}
+
+.news-date {
+    font-size: 12px;
+    color: #cccccc;
+}
+
+.news-title {
+    font-size: 17px;
+    font-weight: bold;
+    padding-right: 24px;
+}
+
+.news-body {
+    padding: 14px 16px;
+    line-height: 1.55;
+    color: #222222;
+}
+
+.news-body p {
+    margin: 0 0 10px;
+}
+
+.news-body p:last-child {
+    margin-bottom: 0;
+}
+
+.news-body img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 6px 0;
+}
 </style>
 </head>
 <body>
@@ -1768,6 +1843,7 @@ footer {
             <a href="#" onclick="toggleSection('viitoare-negru'); return false;" id="nav-viitoare-negru"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
         </div>
     </div>
+    <a href="#" onclick="toggleSection('stiri'); return false;" id="nav-stiri" class="nav-home"><span class="nav-icon">📰</span> Știri</a>
     <a href="#" onclick="toggleSection('galerie'); return false;" id="nav-galerie" class="nav-home"><span class="nav-icon">🖼️</span> Galerie</a>
     <a href="https://amfb.ro/competitii/campionat-minifotbal/2018-albastru/" target="_blank" class="nav-amfb"><span class="nav-icon">🏅</span> Competiție AMFB</a>
 </nav>
@@ -1913,15 +1989,15 @@ footer {
         </div>
     </div>
 
-    <div class="gallery-banner hero-link" role="link" tabindex="0" title="Vezi Galeria"
-         onclick="openSection('galerie')" onkeydown="if(event.key==='Enter'){openSection('galerie');}">
+    <div class="gallery-banner hero-link" role="link" tabindex="0" title="Citește Știrile"
+         onclick="openSection('stiri')" onkeydown="if(event.key==='Enter'){openSection('stiri');}">
         <div class="card-slides" id="gallery-banner-slides"></div>
         <div class="card-overlay"></div>
         <div class="gallery-banner-inner">
-            <span class="gallery-banner-icon">🖼️</span>
+            <span class="gallery-banner-icon">📰</span>
             <div class="gallery-banner-text">
-                <div class="gallery-banner-title">Galerie</div>
-                <div class="gallery-banner-sub">Vezi toate pozele</div>
+                <div class="gallery-banner-title">Știri</div>
+                <div class="gallery-banner-sub">Citește despre meciuri</div>
             </div>
             <span class="gallery-banner-arrow">&#8250;</span>
         </div>
@@ -3231,6 +3307,16 @@ class="youtube-btn">
 
 </section>
 
+<section id="stiri" class="toggle-section">
+
+    <h2>Știri</h2>
+
+    <div class="news-list" id="news-list">
+        <p>Se încarcă știrile...</p>
+    </div>
+
+</section>
+
 <section id="galerie" class="toggle-section">
 
     <h2>Galerie</h2>
@@ -3352,6 +3438,83 @@ class="youtube-btn">
 
     window.addEventListener("resize", refreshModes);
     window.addEventListener("load", refreshModes);
+})();
+</script>
+
+<script>
+// Stiri: citeste fisierul stiri.txt (pus langa index.html) si afiseaza articolele.
+// Format in stiri.txt:
+//   === DD.LL.AAAA | Titlul articolului
+//   Paragraf de text (un rand gol separa paragrafele)
+//   [poza: Poza37.jpeg]
+// Cel mai nou articol se pune primul in fisier.
+(function() {
+    var list = document.getElementById("news-list");
+    if (!list) return;
+
+    function render(text) {
+        var articles = [];
+        var cur = null, para = [];
+        function flush() {
+            if (cur && para.length) cur.blocks.push({ type: "p", text: para.join(" ") });
+            para = [];
+        }
+        text.replace(/^\uFEFF/, "").split(/\r?\n/).forEach(function(line) {
+            var h = line.match(/^===\s*(.+?)\s*\|\s*(.+?)\s*$/);
+            if (h) {
+                flush();
+                cur = { date: h[1], title: h[2], blocks: [] };
+                articles.push(cur);
+                return;
+            }
+            if (!cur) return;
+            var im = line.match(/^\[poza:\s*(.+?)\s*\]\s*$/i);
+            if (im) { flush(); cur.blocks.push({ type: "img", src: im[1] }); return; }
+            if (line.trim() === "") { flush(); return; }
+            para.push(line.trim());
+        });
+        flush();
+
+        list.textContent = "";
+        if (!articles.length) {
+            list.textContent = "Nu există încă nicio știre.";
+            return;
+        }
+        articles.forEach(function(a, i) {
+            var d = document.createElement("details");
+            d.className = "news-item";
+            if (i === 0) d.open = true;
+
+            var s = document.createElement("summary");
+            var sd = document.createElement("span");
+            sd.className = "news-date"; sd.textContent = a.date;
+            var st = document.createElement("span");
+            st.className = "news-title"; st.textContent = a.title;
+            s.appendChild(sd); s.appendChild(st);
+
+            var body = document.createElement("div");
+            body.className = "news-body";
+            a.blocks.forEach(function(b) {
+                if (b.type === "p") {
+                    var p = document.createElement("p");
+                    p.textContent = b.text;
+                    body.appendChild(p);
+                } else {
+                    var img = document.createElement("img");
+                    img.src = b.src; img.alt = a.title; img.loading = "lazy";
+                    body.appendChild(img);
+                }
+            });
+
+            d.appendChild(s); d.appendChild(body);
+            list.appendChild(d);
+        });
+    }
+
+    fetch("stiri.txt", { cache: "no-cache" })
+        .then(function(r) { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+        .then(function(buf) { render(new TextDecoder("utf-8").decode(buf)); })
+        .catch(function() { list.textContent = "Știrile nu s-au putut încărca."; });
 })();
 </script>
 
