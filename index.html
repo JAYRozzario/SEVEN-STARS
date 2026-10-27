@@ -399,10 +399,15 @@ body {
 }
 
 @media (max-width: 768px) {
+    .side-nav {
+        align-items: flex-start;
+    }
+
     .side-nav .nav-group {
         flex: 0 0 auto;
         display: flex;
-        align-items: center;
+        flex-direction: column;
+        align-items: stretch;
         gap: 8px;
     }
 
@@ -419,11 +424,12 @@ body {
 
     .side-nav .nav-group.open .nav-sub {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         animation: none;
     }
 
     .side-nav .nav-sub a {
+        justify-content: flex-start;
         padding: 8px 14px;
         font-size: 12px;
         margin-bottom: 0;
@@ -557,13 +563,14 @@ h2 {
 }
 
 /* Golgheter / Pase De Gol: poza micuta cat textul, in locul liniei galbene */
-#statistica h2.stat-sub {
+#golgheter h2.stat-sub,
+#pase-de-gol h2.stat-sub {
     border-left: none;
     padding-left: 0;
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-top: 30px;
+    margin-top: 0;
 }
 
 .h2-icon {
@@ -1828,8 +1835,10 @@ footer {
         <a href="#" onclick="toggleNavGroup('galben'); return false;" id="nav-grp-galben" class="nav-galben nav-group-btn"><span class="nav-icon">🟡</span> Seven Stars Galben <span class="nav-caret">▼</span></a>
         <div class="nav-sub">
             <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate" class="nav-galben"><span class="nav-icon">🏆</span> Rezultate</a>
-            <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica" class="nav-galben"><span class="nav-icon">📊</span> Statistică</a>
             <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare" class="nav-galben"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
+            <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica" class="nav-galben"><span class="nav-icon">📊</span> Statistică</a>
+            <a href="#" onclick="toggleSection('golgheter'); return false;" id="nav-golgheter" class="nav-galben"><span class="nav-icon">⚽</span> Golgheter</a>
+            <a href="#" onclick="toggleSection('pase-de-gol'); return false;" id="nav-pase-de-gol" class="nav-galben"><span class="nav-icon">🎯</span> Pase De Gol</a>
         </div>
     </div>
     <div class="nav-group nav-group-negru" id="grp-negru">
@@ -2777,10 +2786,10 @@ footer {
             var grp = navBtn.closest(".nav-group");
             if (grp) {
                 document.querySelectorAll(".nav-group").forEach(function(g) { g.classList.remove("open"); });
-                grp.classList.add("open");
+                if (window.innerWidth > 768) grp.classList.add("open");
             }
             section.scrollIntoView({ behavior: "smooth", block: "start" });
-            if (id === "statistica") {
+            if (id === "golgheter" || id === "pase-de-gol") {
                 playRankRoll(section);
             }
         }
@@ -3292,10 +3301,18 @@ class="youtube-btn">
     </div>
     <div class="top-scorers-total">Se calculează automat din Rezultate Seven Stars Galben (meciurile fără scor încă nu se numără).</div>
 
+</section>
+
+<section id="golgheter" class="toggle-section">
+
     <h2 class="stat-sub"><img class="h2-icon" src="poza19.jpeg" alt="">Golgheter</h2>
 
     <ol class="top-scorers" id="top-scorers"></ol>
     <div class="top-scorers-total" id="top-scorers-total"></div>
+
+</section>
+
+<section id="pase-de-gol" class="toggle-section">
 
     <h2 class="stat-sub"><img class="h2-icon" src="poza7.jpeg" alt="">Pase De Gol</h2>
 
