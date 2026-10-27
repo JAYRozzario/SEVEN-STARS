@@ -1822,6 +1822,74 @@ footer {
     border-radius: 8px;
     margin: 6px 0;
 }
+
+/* Clasament (facut cu div-uri, ca sa ramana tabel si pe mobil) */
+.rank-table {
+    max-width: 640px;
+    background: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.rank-row {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr) 32px 32px 32px 32px 64px 40px;
+    align-items: center;
+    padding: 10px 8px;
+    border-bottom: 1px solid #eeeeee;
+    font-size: 14px;
+    text-align: center;
+}
+
+.rank-row:last-child {
+    border-bottom: none;
+}
+
+.rank-row.rank-head {
+    background: #FFD700;
+    color: #000000;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.rank-row .rk-name {
+    text-align: left;
+    font-weight: bold;
+    padding-left: 4px;
+    line-height: 1.2;
+}
+
+.rank-row .rk-pts {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.rank-row.rank-us {
+    background: #fff6bf;
+    box-shadow: inset 4px 0 0 #000000;
+    font-weight: bold;
+}
+
+.rank-row.rank-us .rk-name {
+    font-size: 15px;
+}
+
+@media (max-width: 768px) {
+    .rank-row {
+        grid-template-columns: 28px minmax(0, 1fr) 24px 24px 24px 24px 50px 32px;
+        padding: 9px 4px;
+        font-size: 12px;
+    }
+
+    .rank-row.rank-head {
+        font-size: 11px;
+    }
+
+    .rank-row.rank-us .rk-name {
+        font-size: 13px;
+    }
+}
 </style>
 </head>
 <body>
@@ -1837,6 +1905,7 @@ footer {
             <a href="#" onclick="toggleSection('rezultate'); return false;" id="nav-rezultate" class="nav-galben"><span class="nav-icon">🏆</span> Rezultate</a>
             <a href="#" onclick="toggleSection('viitoare'); return false;" id="nav-viitoare" class="nav-galben"><span class="nav-icon">📅</span> Meciuri Viitoare</a>
             <a href="#" onclick="toggleSection('statistica'); return false;" id="nav-statistica" class="nav-galben"><span class="nav-icon">📊</span> Statistică</a>
+            <a href="#" onclick="toggleSection('clasament'); return false;" id="nav-clasament" class="nav-galben"><span class="nav-icon">🏅</span> Clasament</a>
             <a href="#" onclick="toggleSection('golgheter'); return false;" id="nav-golgheter" class="nav-galben"><span class="nav-icon">⚽</span> Golgheter</a>
             <a href="#" onclick="toggleSection('pase-de-gol'); return false;" id="nav-pase-de-gol" class="nav-galben"><span class="nav-icon">🎯</span> Pase De Gol</a>
         </div>
@@ -2556,6 +2625,46 @@ footer {
         document.getElementById("stat-losses").textContent = st.losses;
         document.getElementById("stat-gf").textContent = st.gf;
         document.getElementById("stat-ga").textContent = st.ga;
+        window.ssStats = st;
+    }
+
+    // Clasament pentru copii. Seven Stars Galben se calculeaza automat din Rezultate
+    // (buildStats). Celelalte echipe sunt rezultate ESTIMATE (nu oficiale): w = victorii,
+    // d = egaluri, l = infrangeri, gf = goluri date, ga = goluri primite.
+    // Pentru a le actualiza, schimba cifrele de mai jos.
+    var CLASAMENT_ALTE = [
+        { n: "Sporting Kids",      w: 4, d: 2, l: 1, gf: 26, ga: 14 },
+        { n: "Intergalaxy",        w: 4, d: 1, l: 2, gf: 28, ga: 19 },
+        { n: "Partizan",           w: 4, d: 0, l: 2, gf: 26, ga: 21 },
+        { n: "Galactik",           w: 3, d: 2, l: 1, gf: 25, ga: 20 },
+        { n: "Super Star Junior",  w: 3, d: 1, l: 2, gf: 20, ga: 17 },
+        { n: "Marius Lăcătuș",     w: 2, d: 2, l: 2, gf: 17, ga: 18 },
+        { n: "Alex V",             w: 2, d: 0, l: 4, gf: 14, ga: 22 },
+        { n: "Seven Stars Negru",  w: 1, d: 1, l: 4, gf: 11, ga: 20 },
+        { n: "Arsenal Sp",         w: 1, d: 0, l: 6, gf: 12, ga: 28 },
+        { n: "FC Juniorul",        w: 0, d: 2, l: 5, gf: 9,  ga: 23 }
+    ];
+
+    function buildStandings() {
+        var box = document.getElementById("rank-table");
+        if (!box) return;
+        var st = window.ssStats || { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0 };
+        var rows = [{ n: "Seven Stars Galben", us: true, w: st.wins, d: st.draws, l: st.losses, gf: st.gf, ga: st.ga }];
+        CLASAMENT_ALTE.forEach(function(t) { rows.push({ n: t.n, us: false, w: t.w, d: t.d, l: t.l, gf: t.gf, ga: t.ga }); });
+        rows.forEach(function(r) { r.m = r.w + r.d + r.l; r.p = r.w * 3 + r.d; });
+        rows.sort(function(a, b) {
+            return (b.p - a.p) || ((b.gf - b.ga) - (a.gf - a.ga)) || (b.gf - a.gf) || (a.us ? -1 : 1);
+        });
+        var html = '<div class="rank-row rank-head"><span>#</span><span class="rk-name">Echipa</span>' +
+            '<span>M</span><span>V</span><span>E</span><span>Î</span><span>G</span><span>P</span></div>';
+        rows.forEach(function(r, i) {
+            var pos = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : (i + 1)));
+            html += '<div class="rank-row' + (r.us ? ' rank-us' : '') + '"><span>' + pos + '</span>' +
+                '<span class="rk-name">' + r.n + '</span><span>' + r.m + '</span><span>' + r.w + '</span><span>' +
+                r.d + '</span><span>' + r.l + '</span><span>' + r.gf + ':' + r.ga + '</span>' +
+                '<span class="rk-pts">' + r.p + '</span></div>';
+        });
+        box.innerHTML = html;
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -2571,6 +2680,7 @@ footer {
         buildTopScorers();
         buildTopAssists();
         buildStats();
+        buildStandings();
         buildResultsCarousel();
         attachBannerCrests();
         attachCountdownCrests();
@@ -3305,6 +3415,14 @@ class="youtube-btn">
         <div class="stat-card"><span class="stat-num" id="stat-ga">0</span><span class="stat-label">Goluri primite</span></div>
     </div>
     <div class="top-scorers-total">Se calculează automat din Rezultate Seven Stars Galben (meciurile fără scor încă nu se numără).</div>
+
+</section>
+
+<section id="clasament" class="toggle-section">
+
+    <h2>Clasament Seven Stars Galben</h2>
+
+    <div class="rank-table" id="rank-table"></div>
 
 </section>
 
