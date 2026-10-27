@@ -2780,6 +2780,11 @@ footer {
             a.classList.remove("active");
         });
 
+        // Pe mobil: orice alta categorie aleasa inchide dropdown-ul ramas deschis.
+        if (window.innerWidth <= 768) {
+            document.querySelectorAll(".nav-group").forEach(function(g) { g.classList.remove("open"); });
+        }
+
         if (!isOpen) {
             section.classList.add("open");
             navBtn.classList.add("active");
