@@ -1823,6 +1823,14 @@ footer {
     margin: 6px 0;
 }
 
+/* poza mai mica, pusa inaintea textului: [poza-mica: nume.webp] */
+.news-body img.news-img-small {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    margin: 4px 0 12px;
+}
+
 /* Clasament (facut cu div-uri, ca sa ramana tabel si pe mobil) */
 .rank-table {
     max-width: 640px;
@@ -3618,6 +3626,7 @@ class="youtube-btn">
 //   === DD.LL.AAAA | Titlul articolului
 //   Paragraf de text (un rand gol separa paragrafele)
 //   [poza: Poza37.jpeg]
+//   [poza-mica: oct1.webp]   (aceeasi poza, dar afisata mai mica)
 // Cel mai nou articol se pune primul in fisier.
 (function() {
     var list = document.getElementById("news-list");
@@ -3639,8 +3648,8 @@ class="youtube-btn">
                 return;
             }
             if (!cur) return;
-            var im = line.match(/^\[poza:\s*(.+?)\s*\]\s*$/i);
-            if (im) { flush(); cur.blocks.push({ type: "img", src: im[1] }); return; }
+            var im = line.match(/^\[poza(-mica)?:\s*(.+?)\s*\]\s*$/i);
+            if (im) { flush(); cur.blocks.push({ type: "img", src: im[2], small: !!im[1] }); return; }
             if (line.trim() === "") { flush(); return; }
             para.push(line.trim());
         });
@@ -3673,6 +3682,7 @@ class="youtube-btn">
                 } else {
                     var img = document.createElement("img");
                     img.src = b.src; img.alt = a.title; img.loading = "lazy";
+                    if (b.small) img.className = "news-img-small";
                     body.appendChild(img);
                 }
             });
