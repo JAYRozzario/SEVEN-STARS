@@ -2928,7 +2928,19 @@ footer {
 <tr>
             <td data-label="Data">31.10.2026</td>
             <td data-label="Ora">13:30</td>
-            <td data-label="Meci">Super Star Junior - Seven Stars</td>
+            <td data-label="Meci">Super Star Junior - Seven Stars
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
+                        <div>Rares O. (1)</div>
+                        <div>David T. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Patrick S. (1)</div>
+                        <div>Mudi (1)</div>
+                    </div>
+                </div></td>
             <td data-label="Scor">2-2</td>
             <td data-label="Status" class="draw">Egal</td>
             <td data-label="LINK MECI">
