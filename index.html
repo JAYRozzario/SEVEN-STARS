@@ -2641,16 +2641,16 @@ footer {
     // d = egaluri, l = infrangeri, gf = goluri date, ga = goluri primite.
     // Pentru a le actualiza, schimba cifrele de mai jos.
     var CLASAMENT_ALTE = [
-        { n: "Sporting Kids",      w: 5, d: 2, l: 2, gf: 33, ga: 20 },
-        { n: "Intergalaxy",        w: 5, d: 1, l: 3, gf: 33, ga: 26 },
-        { n: "Partizan",           w: 4, d: 3, l: 2, gf: 30, ga: 24 },
-        { n: "Alex V",             w: 3, d: 2, l: 4, gf: 26, ga: 27 },
-        { n: "Galactik",           w: 3, d: 1, l: 5, gf: 26, ga: 31 },
-        { n: "Arsenal Sp",         w: 1, d: 2, l: 6, gf: 16, ga: 31 },
-        { n: "Super Star Junior",  w: 1, d: 2, l: 6, gf: 15, ga: 27 },
-        { n: "Seven Stars Negru",  w: 1, d: 2, l: 6, gf: 13, ga: 28 },
-        { n: "Marius Lăcătuș",     w: 0, d: 4, l: 5, gf: 12, ga: 23 },
-        { n: "FC Juniorul",        w: 0, d: 3, l: 6, gf: 10, ga: 26 }
+        { n: "Sporting Kids",      w: 5, d: 2, l: 3, gf: 33, ga: 21 },
+        { n: "Intergalaxy",        w: 6, d: 1, l: 3, gf: 36, ga: 27 },
+        { n: "Partizan",           w: 4, d: 3, l: 3, gf: 30, ga: 32 },
+        { n: "Alex V",             w: 4, d: 2, l: 4, gf: 28, ga: 28 },
+        { n: "Galactik",           w: 3, d: 2, l: 5, gf: 28, ga: 33 },
+        { n: "Arsenal Sp",         w: 1, d: 3, l: 6, gf: 18, ga: 33 },
+        { n: "Super Star Junior",  w: 1, d: 3, l: 6, gf: 16, ga: 28 },
+        { n: "Seven Stars Negru",  w: 2, d: 2, l: 6, gf: 14, ga: 28 },
+        { n: "Marius Lăcătuș",     w: 0, d: 4, l: 6, gf: 13, ga: 26 },
+        { n: "FC Juniorul",        w: 0, d: 3, l: 7, gf: 11, ga: 28 }
     ];
 
     function buildStandings() {
@@ -2932,6 +2932,20 @@ footer {
             <th>Scor</th>
             <th>Status</th>
             <th>Video</th>
+        </tr>
+<tr>
+            <td data-label="Data">07.11.2026</td>
+            <td data-label="Ora">12:40</td>
+            <td data-label="Meci">Seven Stars - Partizan</td>
+            <td data-label="Scor">8-0</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="LINK MECI">
+                <a href="https://youtu.be/5Z0uAp9gUEQ"
+target="_blank"
+class="youtube-btn">
+▶ Video
+</a>
+            </td>
         </tr>
 <tr>
             <td data-label="Data">31.10.2026</td>
@@ -3216,6 +3230,21 @@ class="youtube-btn">
         </tr>
 
         <tr>
+            <td data-label="Data">07.11.2026</td>
+            <td data-label="Ora">11:00</td>
+            <td data-label="Meci">Seven Stars Negru - Sporting Kids
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
+                        <div>Marco N. (1)</div>
+                    </div>
+                </div></td>
+            <td data-label="Scor">1-0</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="LINK MECI">-</td>
+        </tr>
+
+        <tr>
             <td data-label="Data">31.10.2026</td>
             <td data-label="Ora">12:40</td>
             <td data-label="Meci">Seven Stars Negru - Arsenal Sp
@@ -3324,11 +3353,6 @@ class="youtube-btn">
             <th>Meci</th>
         </tr>
 
-        <tr>
-            <td data-label="Data">7.11.2026</td>
-            <td data-label="Ora">11:00</td>
-            <td data-label="Meci">Super Star Junior 1 - Seven Stars Negru</td>
-        </tr>
 
         <tr>
             <td data-label="Data">14.11.2026</td>
@@ -3374,12 +3398,6 @@ class="youtube-btn">
             <th>Data</th>
             <th>Ora</th>
             <th>Meci</th>
-        </tr>
-
-        <tr>
-            <td data-label="Data">7.11.2026</td>
-            <td data-label="Ora">12:40</td>
-            <td data-label="Meci">Seven Stars - Partizan</td>
         </tr>
 
         <tr>
