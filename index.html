@@ -1905,7 +1905,6 @@ footer {
 <nav class="side-nav">
     <div class="side-nav-title"><img src="logo.png.png" alt="SEVEN Stars"></div>
     <a href="#" onclick="goHome(); return false;" id="nav-home" class="nav-home"><span class="nav-icon">🏠</span> Acasă</a>
-    <a href="#" onclick="toggleSection('stiri'); return false;" id="nav-stiri" class="nav-home"><span class="nav-icon">📰</span> Știri</a>
     <a href="#" onclick="toggleSection('echipa'); return false;" id="nav-echipa" class="nav-home"><span class="nav-icon">👥</span> Echipa</a>
     <div class="nav-group" id="grp-galben">
         <a href="#" onclick="toggleNavGroup('galben'); return false;" id="nav-grp-galben" class="nav-galben nav-group-btn"><span class="nav-icon">🟡</span> Seven Stars Galben <span class="nav-caret">▼</span></a>
@@ -2072,15 +2071,14 @@ footer {
         </div>
     </div>
 
-    <div class="gallery-banner hero-link" role="link" tabindex="0" title="Citește Știrile"
-         onclick="openSection('stiri')" onkeydown="if(event.key==='Enter'){openSection('stiri');}">
+    <div class="gallery-banner hero-link" role="link" tabindex="0" title="Vezi Galeria"
+         onclick="openSection('galerie')" onkeydown="if(event.key==='Enter'){openSection('galerie');}">
         <div class="card-slides" id="gallery-banner-slides"></div>
         <div class="card-overlay"></div>
         <div class="gallery-banner-inner">
-            <span class="gallery-banner-icon">📰</span>
+            <span class="gallery-banner-icon">🖼️</span>
             <div class="gallery-banner-text">
-                <div class="gallery-banner-title">Știri</div>
-                <div class="gallery-banner-sub">Citește despre meciuri</div>
+                <div class="gallery-banner-title">Galerie</div>
             </div>
             <span class="gallery-banner-arrow">&#8250;</span>
         </div>
