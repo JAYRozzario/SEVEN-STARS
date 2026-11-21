@@ -2640,16 +2640,16 @@ footer {
     // d = egaluri, l = infrangeri, gf = goluri date, ga = goluri primite.
     // Pentru a le actualiza, schimba cifrele de mai jos.
     var CLASAMENT_ALTE = [
-        { n: "Sporting Kids",      w: 5, d: 2, l: 4, gf: 33, ga: 24 },
-        { n: "ACS Inter Galaxy",    w: 7, d: 1, l: 3, gf: 40, ga: 28 },
-        { n: "Partizan",           w: 5, d: 3, l: 3, gf: 34, ga: 34 },
-        { n: "Alex V",             w: 5, d: 2, l: 4, gf: 31, ga: 30 },
-        { n: "Galactik",           w: 3, d: 2, l: 6, gf: 30, ga: 36 },
-        { n: "Arsenal Sp",         w: 1, d: 3, l: 7, gf: 19, ga: 37 },
-        { n: "Super Star Junior",  w: 1, d: 4, l: 6, gf: 17, ga: 29 },
-        { n: "Seven Stars Negru",  w: 2, d: 2, l: 7, gf: 16, ga: 32 },
-        { n: "Marius Lăcătuș",     w: 0, d: 4, l: 7, gf: 13, ga: 27 },
-        { n: "FC Juniorul",        w: 0, d: 4, l: 7, gf: 12, ga: 29 }
+        { n: "Sporting Kids",      w: 6, d: 2, l: 4, gf: 37, ga: 25 },
+        { n: "ACS Inter Galaxy",    w: 7, d: 1, l: 4, gf: 44, ga: 38 },
+        { n: "Partizan",           w: 6, d: 3, l: 3, gf: 37, ga: 36 },
+        { n: "Alex V",             w: 6, d: 2, l: 4, gf: 34, ga: 31 },
+        { n: "Galactik",           w: 3, d: 2, l: 7, gf: 32, ga: 39 },
+        { n: "Arsenal Sp",         w: 1, d: 3, l: 8, gf: 20, ga: 41 },
+        { n: "Super Star Junior",  w: 1, d: 5, l: 6, gf: 18, ga: 30 },
+        { n: "Seven Stars Negru",  w: 2, d: 2, l: 8, gf: 17, ga: 35 },
+        { n: "Marius Lăcătuș",     w: 0, d: 5, l: 7, gf: 14, ga: 28 },
+        { n: "FC Juniorul",        w: 0, d: 4, l: 8, gf: 12, ga: 31 }
     ];
 
     function buildStandings() {
@@ -2931,6 +2931,39 @@ footer {
             <th>Scor</th>
             <th>Status</th>
             <th>Video</th>
+        </tr>
+<tr>
+            <td data-label="Data">21.11.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Seven Stars - ACS Inter Galaxy
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
+                        <div>Rares O. (3)</div>
+                        <div>Denis C. (2)</div>
+                        <div>David T. (2)</div>
+                        <div>Mudi (3)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Nectarie M. (1)</div>
+                        <div>Denis C. (1)</div>
+                        <div>Rares O. (1)</div>
+                        <div>David T. (1)</div>
+                        <div>Mudi (1)</div>
+                        <div>Patrick S. (1)</div>
+                        <div>Marco N. (1)</div>
+                    </div>
+                </div></td>
+            <td data-label="Scor">10-4</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="LINK MECI">
+                <a href="https://youtu.be/eeHav2_IDRA"
+target="_blank"
+class="youtube-btn">
+▶ Video
+</a>
+            </td>
         </tr>
 <tr>
             <td data-label="Data">14.11.2026</td>
@@ -3268,6 +3301,15 @@ class="youtube-btn">
         </tr>
 
         <tr>
+            <td data-label="Data">21.11.2026</td>
+            <td data-label="Ora">09:20</td>
+            <td data-label="Meci">Seven Stars Negru - Alex V</td>
+            <td data-label="Scor">-</td>
+            <td data-label="Status" class="loss">Înfrângere</td>
+            <td data-label="LINK MECI">-</td>
+        </tr>
+
+        <tr>
             <td data-label="Data">14.11.2026</td>
             <td data-label="Ora">09:20</td>
             <td data-label="Meci">Seven Stars Negru - Partizan</td>
@@ -3408,11 +3450,6 @@ class="youtube-btn">
 
 
 
-        <tr>
-            <td data-label="Data">21.11.2026</td>
-            <td data-label="Ora">9:20</td>
-            <td data-label="Meci">Seven Stars Negru - Alex V</td>
-        </tr>
 
         <tr>
             <td data-label="Data">28.11.2026</td>
@@ -3449,11 +3486,6 @@ class="youtube-btn">
         </tr>
 
 
-        <tr>
-            <td data-label="Data">21.11.2026</td>
-            <td data-label="Ora">10:10</td>
-            <td data-label="Meci">Seven Stars - ACS Inter Galaxy</td>
-        </tr>
 
         <tr>
             <td data-label="Data">28.11.2026</td>
