@@ -1900,7 +1900,8 @@ footer {
 }
 
 /* ===== Rezultate Galben: carduri (in stilul paginilor de rezultate) ===== */
-#rezultate.has-cards table { display: none; }
+#rezultate.has-cards table,
+#negru.has-cards table { display: none; }
 .res-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
@@ -2882,14 +2883,16 @@ footer {
         return row;
     }
 
-    function buildResultCards() {
-        var section = document.getElementById("rezultate");
+    function buildResultCards(sectionId) {
+        sectionId = sectionId || "rezultate";
+        var section = document.getElementById(sectionId);
         var table = section ? section.querySelector("table") : null;
         if (!table) return;
-        var box = document.getElementById("res-cards");
+        var boxId = sectionId === "rezultate" ? "res-cards" : "res-cards-" + sectionId;
+        var box = document.getElementById(boxId);
         if (!box) {
             box = document.createElement("div");
-            box.id = "res-cards";
+            box.id = boxId;
             box.className = "res-cards";
             table.parentNode.insertBefore(box, table);
         }
@@ -2934,7 +2937,7 @@ footer {
             top.appendChild(when);
             var badge = document.createElement("span");
             badge.className = "res-badge " + it.cls;
-            badge.textContent = (it.s1 === "-") ? "În curând" : (it.status || "Final");
+            badge.textContent = (it.status && it.status !== "-") ? it.status : (it.s1 === "-" ? "În curând" : "Final");
             top.appendChild(badge);
             card.appendChild(top);
 
@@ -3002,6 +3005,7 @@ footer {
         buildStandings();
         buildResultsCarousel();
         buildResultCards();
+        buildResultCards("negru");
         attachBannerCrests();
         attachCountdownCrests();
         attachCountdownCrestsNeg();
