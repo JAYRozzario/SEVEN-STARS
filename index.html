@@ -1993,16 +1993,16 @@ footer {
 .res-thumb {
     position: relative;
     display: block;
-    width: 104px;
-    height: 78px;
+    width: 120px;
+    height: 68px;
     flex-shrink: 0;
     border-left: 1px solid #dddddd;
     padding-left: 14px;
     box-sizing: content-box;
 }
 .res-thumb img {
-    width: 104px;
-    height: 78px;
+    width: 120px;
+    height: 68px;
     object-fit: cover;
     object-position: 50% 30%;
     border-radius: 6px;
@@ -2045,7 +2045,7 @@ footer {
 @media (max-width: 480px) {
     .res-team { font-size: 15px; }
     .res-goals { font-size: 20px; }
-    .res-thumb, .res-thumb img { width: 88px; height: 66px; }
+    .res-thumb, .res-thumb img { width: 100px; height: 56px; }
     .res-thumb { padding-left: 10px; }
     .res-thumb .res-play { left: 15px; }
 }
@@ -2829,17 +2829,29 @@ footer {
     // Rezultate Galben afisate ca si carduri. Tabelul ramane sursa de date (doar e ascuns):
     // tot ce scrii in tabel apare automat in carduri. Marcatorii / Pase De Gol se muta sub card.
     // Iconita video foloseste o poza aleatoare din Galerie.
+    // Doar poze reale din meciuri (fara cele in stil desen animat). Ca sa adaugi o poza noua
+    // pe iconita video, scrie aici numele fisierului ei din Galerie.
+    var VIDEO_THUMBS = [
+        "201.webp", "202.webp", "203.webp", "204.webp", "205.webp", "206.webp", "207.webp", "208.webp",
+        "210.webp", "211.webp", "212.webp", "213.webp", "214.webp", "215.webp", "216.webp", "217.webp",
+        "218.webp", "219.webp", "220.webp", "221.webp", "222.webp", "223.webp", "224.webp", "225.webp"
+    ];
     var resThumbPool = null;
     function nextGalleryThumb() {
         if (!resThumbPool || !resThumbPool.length) {
-            resThumbPool = Array.prototype.map.call(document.querySelectorAll(".gallery-grid img"),
-                function(img) { return img.getAttribute("src"); }).filter(Boolean);
+            resThumbPool = VIDEO_THUMBS.slice();
             for (var i = resThumbPool.length - 1; i > 0; i--) {
                 var j = Math.floor(Math.random() * (i + 1));
                 var t = resThumbPool[i]; resThumbPool[i] = resThumbPool[j]; resThumbPool[j] = t;
             }
         }
         return resThumbPool.pop() || "";
+    }
+
+    // Scoate ID-ul clipului din linkuri de tip youtu.be/ID, youtube.com/watch?v=ID, /shorts/ID, /live/ID
+    function youtubeId(url) {
+        var m = (url || "").match(/(?:youtu\.be\/|[?&]v=|\/shorts\/|\/live\/|\/embed\/)([A-Za-z0-9_-]{11})/);
+        return m ? m[1] : "";
     }
 
     function resTeamRow(name, goals) {
@@ -2941,13 +2953,25 @@ footer {
                 th.rel = "noopener";
                 th.title = "Vezi video";
                 var img = document.createElement("img");
-                img.src = nextGalleryThumb();
                 img.alt = "Video " + it.t1 + " - " + it.t2;
                 img.loading = "lazy";
-                // poze pe verticala: arata partea de sus (capul), nu mijlocul
-                img.onload = function() {
-                    if (this.naturalHeight > this.naturalWidth) this.style.objectPosition = "50% 12%";
-                };
+                var ytId = youtubeId(it.video);
+                if (ytId) {
+                    // imaginea de previzualizare a clipului de pe YouTube
+                    img.src = "https://i.ytimg.com/vi/" + ytId + "/mqdefault.jpg";
+                    img.style.objectPosition = "50% 50%";
+                    img.onerror = function() {
+                        this.onerror = null;
+                        this.src = nextGalleryThumb();
+                        this.style.objectPosition = "";
+                    };
+                } else {
+                    // fara link YouTube: poza aleatoare din meciuri
+                    img.src = nextGalleryThumb();
+                    img.onload = function() {
+                        if (this.naturalHeight > this.naturalWidth) this.style.objectPosition = "50% 12%";
+                    };
+                }
                 th.appendChild(img);
                 var pl = document.createElement("span");
                 pl.className = "res-play";
