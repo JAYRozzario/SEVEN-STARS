@@ -1898,6 +1898,156 @@ footer {
         font-size: 13px;
     }
 }
+
+/* ===== Rezultate Galben: carduri (in stilul paginilor de rezultate) ===== */
+#rezultate.has-cards table { display: none; }
+.res-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 14px;
+    align-items: start;
+}
+.res-card {
+    background: #f6f7f9;
+    border-radius: 14px;
+    padding: 12px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+.res-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 12px;
+    color: #777777;
+}
+.res-badge {
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 20px;
+    color: #ffffff;
+    background: #999999;
+    flex-shrink: 0;
+}
+.res-badge.win { background: #1f9d55; color: #ffffff; }
+.res-badge.draw { background: #f0a500; color: #ffffff; }
+.res-badge.loss { background: #d93636; color: #ffffff; }
+.res-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.res-teams {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.res-team {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    color: #1a1a2e;
+}
+.res-team .res-crest {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+.res-team .res-crest-ph {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #e3e5ea;
+    color: #555555;
+    font-size: 12px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.res-name {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.res-team.us .res-name { font-weight: bold; }
+.res-goals {
+    font-size: 22px;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: right;
+}
+.res-thumb {
+    position: relative;
+    display: block;
+    width: 112px;
+    height: 64px;
+    flex-shrink: 0;
+    border-left: 1px solid #dddddd;
+    padding-left: 14px;
+    box-sizing: content-box;
+}
+.res-thumb img {
+    width: 112px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+    background: #222222;
+}
+.res-thumb .res-play {
+    position: absolute;
+    left: 20px;
+    bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 7px 3px 4px;
+    border-radius: 12px;
+}
+.res-thumb .res-play-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    color: #000000;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1px;
+    box-sizing: border-box;
+}
+.res-thumb:hover img { filter: brightness(1.12); }
+.res-card .scorers { margin-top: 2px; }
+.res-card .scorers-list { background: #ffffff; }
+@media (max-width: 900px) {
+    .res-cards { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+    .res-team { font-size: 15px; }
+    .res-goals { font-size: 20px; }
+    .res-thumb, .res-thumb img { width: 92px; height: 54px; }
+    .res-thumb { padding-left: 10px; }
+    .res-thumb .res-play { left: 15px; }
+}
 </style>
 </head>
 <body>
@@ -2245,6 +2395,7 @@ footer {
         applyLastResult();
         attachBannerCrests();
         buildResultsCarousel();
+        buildResultCards();
     }
 
     function updateCountdown() {
@@ -2674,6 +2825,138 @@ footer {
         box.innerHTML = html;
     }
 
+    // Rezultate Galben afisate ca si carduri. Tabelul ramane sursa de date (doar e ascuns):
+    // tot ce scrii in tabel apare automat in carduri. Marcatorii / Pase De Gol se muta sub card.
+    // Iconita video foloseste o poza aleatoare din Galerie.
+    var resThumbPool = null;
+    function nextGalleryThumb() {
+        if (!resThumbPool || !resThumbPool.length) {
+            resThumbPool = Array.prototype.map.call(document.querySelectorAll(".gallery-grid img"),
+                function(img) { return img.getAttribute("src"); }).filter(Boolean);
+            for (var i = resThumbPool.length - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var t = resThumbPool[i]; resThumbPool[i] = resThumbPool[j]; resThumbPool[j] = t;
+            }
+        }
+        return resThumbPool.pop() || "";
+    }
+
+    function resTeamRow(name, goals) {
+        var row = document.createElement("div");
+        row.className = "res-team" + (/^seven stars/i.test(name) ? " us" : "");
+        var file = crestFile(name);
+        var cr;
+        if (file) {
+            cr = document.createElement("img");
+            cr.className = "res-crest";
+            cr.src = file;
+            cr.alt = "";
+            cr.loading = "lazy";
+        } else {
+            cr = document.createElement("span");
+            cr.className = "res-crest-ph";
+            cr.textContent = name.trim().charAt(0).toUpperCase();
+        }
+        row.appendChild(cr);
+        var n = document.createElement("span");
+        n.className = "res-name";
+        n.textContent = name;
+        row.appendChild(n);
+        var g = document.createElement("span");
+        g.className = "res-goals";
+        g.textContent = goals;
+        row.appendChild(g);
+        return row;
+    }
+
+    function buildResultCards() {
+        var section = document.getElementById("rezultate");
+        var table = section ? section.querySelector("table") : null;
+        if (!table) return;
+        var box = document.getElementById("res-cards");
+        if (!box) {
+            box = document.createElement("div");
+            box.id = "res-cards";
+            box.className = "res-cards";
+            table.parentNode.insertBefore(box, table);
+        }
+        var items = [];
+        table.querySelectorAll("tr").forEach(function(row) {
+            var c = row.querySelectorAll("td");
+            if (c.length < 4) return;
+            var date = parseMatchDate(c[0].textContent.trim(), c[1].textContent.trim());
+            if (!date) return;
+            if (!row._scorers) row._scorers = c[2].querySelector(".scorers");
+            var cell = c[2].cloneNode(true);
+            var extra = cell.querySelector(".scorers");
+            if (extra) extra.parentNode.removeChild(extra);
+            var meci = (c[2].dataset.meci || cell.textContent).replace(/\s+/g, " ").trim();
+            var teams = meci.split(/\s-\s/);
+            if (teams.length !== 2) return;
+            var sm = c[3].textContent.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+            var a = c[5] ? c[5].querySelector("a[href]") : null;
+            var st = c[4] ? c[4] : null;
+            items.push({
+                date: date,
+                t1: teams[0].trim(), t2: teams[1].trim(),
+                s1: sm ? sm[1] : "-", s2: sm ? sm[2] : "-",
+                status: st ? st.textContent.trim() : "",
+                cls: st ? (st.classList.contains("win") ? "win" : st.classList.contains("draw") ? "draw" :
+                      st.classList.contains("loss") ? "loss" : "") : "",
+                video: a ? a.getAttribute("href") : "",
+                scorers: row._scorers
+            });
+        });
+        items.sort(function(x, y) { return y.date - x.date; });
+
+        box.innerHTML = "";
+        items.forEach(function(it) {
+            var card = document.createElement("div");
+            card.className = "res-card";
+
+            var top = document.createElement("div");
+            top.className = "res-card-top";
+            var when = document.createElement("span");
+            when.textContent = formatMatchDate(it.date);
+            top.appendChild(when);
+            var badge = document.createElement("span");
+            badge.className = "res-badge " + it.cls;
+            badge.textContent = (it.s1 === "-") ? "În curând" : (it.status || "Final");
+            top.appendChild(badge);
+            card.appendChild(top);
+
+            var main = document.createElement("div");
+            main.className = "res-main";
+            var teams = document.createElement("div");
+            teams.className = "res-teams";
+            teams.appendChild(resTeamRow(it.t1, it.s1));
+            teams.appendChild(resTeamRow(it.t2, it.s2));
+            main.appendChild(teams);
+            if (it.video) {
+                var th = document.createElement("a");
+                th.className = "res-thumb";
+                th.href = it.video;
+                th.target = "_blank";
+                th.rel = "noopener";
+                th.title = "Vezi video";
+                var img = document.createElement("img");
+                img.src = nextGalleryThumb();
+                img.alt = "Video " + it.t1 + " - " + it.t2;
+                img.loading = "lazy";
+                th.appendChild(img);
+                var pl = document.createElement("span");
+                pl.className = "res-play";
+                pl.innerHTML = '<span class="res-play-dot">▶</span>Video';
+                th.appendChild(pl);
+                main.appendChild(th);
+            }
+            card.appendChild(main);
+            if (it.scorers) card.appendChild(it.scorers);
+            box.appendChild(card);
+        });
+        section.classList.add("has-cards");
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         applyMatch(pickNextMatch());
         addPendingResults();
@@ -2689,6 +2972,7 @@ footer {
         buildStats();
         buildStandings();
         buildResultsCarousel();
+        buildResultCards();
         attachBannerCrests();
         attachCountdownCrests();
         attachCountdownCrestsNeg();
