@@ -2050,6 +2050,102 @@ footer {
     .res-thumb { padding-left: 10px; }
     .res-thumb .res-play { left: 15px; }
 }
+
+/* ===== Clasament (stil "League Phase") ===== */
+.lp-wrap {
+    max-width: 760px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.lp-table { min-width: 640px; }
+.lp-row {
+    display: grid;
+    grid-template-columns: 34px 34px minmax(150px, 1fr) 30px 30px 30px 30px 84px 104px 44px;
+    align-items: center;
+    column-gap: 6px;
+    padding: 7px 4px;
+    border-bottom: 1px solid #e6e6ea;
+    font-size: 14px;
+    color: #2b2b3a;
+    text-align: center;
+}
+.lp-row.lp-head {
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    color: #8a8a99;
+    text-transform: uppercase;
+    border-bottom: 1px solid #cfcfd8;
+    padding-bottom: 9px;
+}
+.lp-head .lp-team { background: none; padding-left: 10px; }
+.lp-pos {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: #1e60d6;
+    color: #ffffff;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lp-crest { width: 28px; height: 28px; object-fit: contain; display: block; margin: 0 auto; }
+.lp-crest-ph {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #e3e5ea; color: #555555; font-size: 12px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto;
+}
+.lp-team {
+    text-align: left;
+    font-weight: bold;
+    background: #f1eff4;
+    border-radius: 4px;
+    padding: 6px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.lp-form { display: flex; justify-content: center; gap: 3px; }
+.lp-dot {
+    width: 20px; height: 20px; border-radius: 50%;
+    color: #ffffff; font-size: 11px; font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+}
+.lp-dot.w { background: #2fb344; }
+.lp-dot.d { background: #f5b800; }
+.lp-dot.l { background: #e0243b; }
+.lp-dot.n { background: #dcdce2; color: #9a9aa6; }
+.lp-pts {
+    background: #f1eff4;
+    border-radius: 4px;
+    padding: 6px 0;
+    font-weight: 800;
+    font-size: 15px;
+    color: #1a1a2e;
+}
+.lp-row.lp-us .lp-team,
+.lp-row.lp-us .lp-pts { background: #FFD700; color: #000000; }
+.lp-row.lp-us .lp-pos { background: #000000; color: #FFD700; }
+@media (max-width: 600px) {
+    .lp-table { min-width: 0; }
+    .lp-row {
+        grid-template-columns: 24px 24px minmax(0, 1fr) 22px 52px 78px 32px;
+        column-gap: 4px;
+        padding: 6px 0;
+        font-size: 12px;
+    }
+    .lp-row > span:nth-child(5),
+    .lp-row > span:nth-child(6),
+    .lp-row > span:nth-child(7) { display: none; }
+    .lp-pos { width: 22px; height: 22px; font-size: 12px; }
+    .lp-crest, .lp-crest-ph { width: 22px; height: 22px; }
+    .lp-team { padding: 5px 6px; font-size: 12px; }
+    .lp-dot { width: 16px; height: 16px; font-size: 9px; }
+    .lp-form { gap: 2px; }
+    .lp-pts { font-size: 13px; padding: 5px 0; }
+    .lp-row.lp-head { font-size: 9px; letter-spacing: 0.5px; }
+}
 </style>
 </head>
 <body>
@@ -2792,6 +2888,8 @@ footer {
     // (buildStats). Celelalte echipe sunt rezultate ESTIMATE (nu oficiale): w = victorii,
     // d = egaluri, l = infrangeri, gf = goluri date, ga = goluri primite.
     // Pentru a le actualiza, schimba cifrele de mai jos.
+    // f = forma ultimelor 4 meciuri, de la cel mai vechi la cel mai nou: V = victorie, E = egal, I = infrangere
+    //     (ex: f: "VVEI"). Daca lipseste, apar cercuri gri. Galben si Negru se calculeaza automat.
     var CLASAMENT_ALTE = [
         { n: "Sporting Kids",      w: 6, d: 2, l: 4, gf: 37, ga: 25 },
         { n: "ACS Inter Galaxy",    w: 7, d: 1, l: 4, gf: 44, ga: 38 },
@@ -2805,26 +2903,70 @@ footer {
         { n: "FC Juniorul",        w: 0, d: 4, l: 8, gf: 12, ga: 31 }
     ];
 
+    // Forma (ultimele 4 meciuri jucate) din tabelul unei sectiuni de rezultate,
+    // dupa clasa de la Status: win / draw / loss. Ordinea: cel mai vechi -> cel mai nou.
+    function formFromSection(sel) {
+        var list = [];
+        document.querySelectorAll(sel + " table tr").forEach(function(row) {
+            var c = row.querySelectorAll("td");
+            if (c.length < 5) return;
+            var d = parseMatchDate(c[0].textContent.trim(), c[1].textContent.trim());
+            var cl = c[4].classList;
+            var r = cl.contains("win") ? "V" : cl.contains("draw") ? "E" : cl.contains("loss") ? "I" : "";
+            if (d && r) list.push({ d: d, r: r });
+        });
+        list.sort(function(a, b) { return a.d - b.d; });
+        return list.slice(-4).map(function(x) { return x.r; }).join("");
+    }
+
+    function lpCrest(name) {
+        var file = crestFile(name) || crestFile(name.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        return file ? '<img class="lp-crest" src="' + file + '" alt="" loading="lazy">'
+                    : '<span class="lp-crest-ph">' + name.trim().charAt(0).toUpperCase() + '</span>';
+    }
+
+    function lpForm(f) {
+        f = (f || "").toUpperCase().replace(/[^VEI]/g, "").slice(-4);
+        var html = "";
+        for (var k = 0; k < 4 - f.length; k++) html += '<span class="lp-dot n" title="Fără date">–</span>';
+        for (var i = 0; i < f.length; i++) {
+            var ch = f.charAt(i);
+            html += ch === "V" ? '<span class="lp-dot w" title="Victorie">✓</span>'
+                  : ch === "E" ? '<span class="lp-dot d" title="Egal">–</span>'
+                  : '<span class="lp-dot l" title="Înfrângere">✕</span>';
+        }
+        return '<span class="lp-form">' + html + '</span>';
+    }
+
     function buildStandings() {
         var box = document.getElementById("rank-table");
         if (!box) return;
         var st = window.ssStats || { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0 };
-        var rows = [{ n: "Seven Stars Galben", us: true, w: st.wins, d: st.draws, l: st.losses, gf: st.gf, ga: st.ga }];
-        CLASAMENT_ALTE.forEach(function(t) { rows.push({ n: t.n, us: false, w: t.w, d: t.d, l: t.l, gf: t.gf, ga: t.ga }); });
+        var rows = [{ n: "Seven Stars Galben", us: true, w: st.wins, d: st.draws, l: st.losses, gf: st.gf, ga: st.ga,
+                      f: formFromSection("#rezultate") }];
+        CLASAMENT_ALTE.forEach(function(t) {
+            var f = t.f;
+            if (!f && t.n === "Seven Stars Negru") f = formFromSection("#negru");
+            rows.push({ n: t.n, us: false, w: t.w, d: t.d, l: t.l, gf: t.gf, ga: t.ga, f: f });
+        });
         rows.forEach(function(r) { r.m = r.w + r.d + r.l; r.p = r.w * 3 + r.d; });
         rows.sort(function(a, b) {
             return (b.p - a.p) || ((b.gf - b.ga) - (a.gf - a.ga)) || (b.gf - a.gf) || (a.us ? -1 : 1);
         });
-        var html = '<div class="rank-row rank-head"><span>#</span><span class="rk-name">Echipa</span>' +
-            '<span>M</span><span>V</span><span>E</span><span>Î</span><span>G</span><span>P</span></div>';
+        var html = '<div class="lp-table"><div class="lp-row lp-head"><span></span><span></span>' +
+            '<span class="lp-team">Echipa</span><span>M</span><span>V</span><span>E</span><span>Î</span>' +
+            '<span>Golaveraj</span><span>Forma</span><span>Pct</span></div>';
         rows.forEach(function(r, i) {
-            var pos = i === 0 ? "🥇" : (i === 1 ? "🥈" : (i === 2 ? "🥉" : (i + 1)));
-            html += '<div class="rank-row' + (r.us ? ' rank-us' : '') + '"><span>' + pos + '</span>' +
-                '<span class="rk-name">' + r.n + '</span><span>' + r.m + '</span><span>' + r.w + '</span><span>' +
-                r.d + '</span><span>' + r.l + '</span><span>' + r.gf + ':' + r.ga + '</span>' +
-                '<span class="rk-pts">' + r.p + '</span></div>';
+            html += '<div class="lp-row' + (r.us ? ' lp-us' : '') + '">' +
+                '<span class="lp-pos">' + (i + 1) + '</span>' +
+                '<span>' + lpCrest(r.n) + '</span>' +
+                '<span class="lp-team">' + r.n + '</span>' +
+                '<span>' + r.m + '</span><span>' + r.w + '</span><span>' + r.d + '</span><span>' + r.l + '</span>' +
+                '<span>' + r.gf + ' – ' + r.ga + '</span>' +
+                lpForm(r.f) +
+                '<span class="lp-pts">' + r.p + '</span></div>';
         });
-        box.innerHTML = html;
+        box.innerHTML = html + '</div>';
     }
 
     // Rezultate Galben afisate ca si carduri. Tabelul ramane sursa de date (doar e ascuns):
@@ -3903,7 +4045,7 @@ class="youtube-btn">
 
     <h2>Clasament Seven Stars Galben *</h2>
 
-    <div class="rank-table" id="rank-table"></div>
+    <div class="lp-wrap" id="rank-table"></div>
     <div class="top-scorers-total">* Clasament virtual</div>
 
 </section>
