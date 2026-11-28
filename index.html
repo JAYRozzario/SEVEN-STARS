@@ -2892,16 +2892,16 @@ footer {
     //     (ex: f: "VVEI"). Daca lipseste, apar cercuri gri. Galben si Negru se calculeaza automat.
     //     Formele de mai jos sunt estimate; rezultatele cu noi (Galben/Negru) din ultimele 4 etape sunt reale.
     var CLASAMENT_ALTE = [
-        { n: "Sporting Kids",      w: 6, d: 2, l: 4, gf: 37, ga: 25, f: "VIIV" },
-        { n: "ACS Inter Galaxy",    w: 7, d: 1, l: 4, gf: 44, ga: 38, f: "VVEI" },
-        { n: "Partizan",           w: 6, d: 3, l: 3, gf: 37, ga: 36, f: "VIVE" },
-        { n: "Alex V",             w: 6, d: 2, l: 4, gf: 34, ga: 31, f: "EVIV" },
-        { n: "Galactik",           w: 3, d: 2, l: 7, gf: 32, ga: 39, f: "IVIE" },
-        { n: "Arsenal Sp",         w: 1, d: 3, l: 8, gf: 20, ga: 41, f: "IIEI" },
-        { n: "Super Star Junior",  w: 1, d: 5, l: 6, gf: 18, ga: 30, f: "EIEI" },
-        { n: "Seven Stars Negru",  w: 2, d: 2, l: 8, gf: 17, ga: 35 },
-        { n: "Marius Lăcătuș",     w: 0, d: 5, l: 7, gf: 14, ga: 28, f: "IEIE" },
-        { n: "FC Juniorul",        w: 0, d: 4, l: 8, gf: 12, ga: 31, f: "EIII" }
+        { n: "Sporting Kids",      w: 6, d: 2, l: 5, gf: 39, ga: 28, f: "IIVI" },
+        { n: "ACS Inter Galaxy",    w: 8, d: 1, l: 4, gf: 47, ga: 40, f: "VEIV" },
+        { n: "Partizan",           w: 6, d: 4, l: 3, gf: 39, ga: 38, f: "IVEE" },
+        { n: "Alex V",             w: 6, d: 2, l: 5, gf: 36, ga: 37, f: "VIVI" },
+        { n: "Galactik",           w: 3, d: 3, l: 7, gf: 34, ga: 41, f: "VIEE" },
+        { n: "Arsenal Sp",         w: 1, d: 3, l: 9, gf: 21, ga: 44, f: "IEII" },
+        { n: "Super Star Junior",  w: 2, d: 5, l: 6, gf: 21, ga: 31, f: "IEIV" },
+        { n: "Seven Stars Negru",  w: 2, d: 2, l: 9, gf: 21, ga: 42 },
+        { n: "Marius Lăcătuș",     w: 1, d: 5, l: 7, gf: 16, ga: 29, f: "EIEV" },
+        { n: "FC Juniorul",        w: 0, d: 4, l: 9, gf: 13, ga: 33, f: "IIII" }
     ];
 
     // Forma (ultimele 4 meciuri jucate) din tabelul unei sectiuni de rezultate,
@@ -3393,6 +3393,35 @@ footer {
             <th>Video</th>
         </tr>
 <tr>
+            <td data-label="Data">28.11.2026</td>
+            <td data-label="Ora">09:20</td>
+            <td data-label="Meci">Alex V - Seven Stars
+                <div class="scorers">
+                    <button type="button" class="scorers-toggle" data-list="g" onclick="toggleScorers(this)">⚽ Marcatori <span class="arrow">▼</span></button>
+                    <button type="button" class="scorers-toggle" data-list="a" onclick="toggleScorers(this)">🎯 Pase De Gol <span class="arrow">▼</span></button>
+                    <div class="scorers-list" data-list="g">
+                        <div>Rares O. (3)</div>
+                        <div>Damian G. (2)</div>
+                        <div>David T. (1)</div>
+                    </div>
+                    <div class="scorers-list assists-list" data-list="a">
+                        <div>Denis C. (2)</div>
+                        <div>Rares O. (2)</div>
+                        <div>Nectarie M. (1)</div>
+                        <div>Mudi (1)</div>
+                    </div>
+                </div></td>
+            <td data-label="Scor">2-6</td>
+            <td data-label="Status" class="win">Victorie</td>
+            <td data-label="LINK MECI">
+                <a href="https://youtu.be/JKOBW2coVkM"
+target="_blank"
+class="youtube-btn">
+▶ Video
+</a>
+            </td>
+        </tr>
+<tr>
             <td data-label="Data">21.11.2026</td>
             <td data-label="Ora">10:10</td>
             <td data-label="Meci">Seven Stars - ACS Inter Galaxy
@@ -3761,6 +3790,21 @@ class="youtube-btn">
         </tr>
 
         <tr>
+            <td data-label="Data">28.11.2026</td>
+            <td data-label="Ora">10:10</td>
+            <td data-label="Meci">Seven Stars Negru - Alex V</td>
+            <td data-label="Scor">4-7</td>
+            <td data-label="Status" class="loss">Înfrângere</td>
+            <td data-label="LINK MECI">
+                <a href="https://youtu.be/ubQ6bjt8nYM"
+target="_blank"
+class="youtube-btn">
+▶ Video
+</a>
+            </td>
+        </tr>
+
+        <tr>
             <td data-label="Data">21.11.2026</td>
             <td data-label="Ora">09:20</td>
             <td data-label="Meci">Seven Stars Negru - Alex V</td>
@@ -3911,11 +3955,6 @@ class="youtube-btn">
 
 
 
-        <tr>
-            <td data-label="Data">28.11.2026</td>
-            <td data-label="Ora">10:10</td>
-            <td data-label="Meci">Seven Stars Negru - Alex V</td>
-        </tr>
 
         <tr>
             <td data-label="Data">5.12.2026</td>
@@ -3947,11 +3986,6 @@ class="youtube-btn">
 
 
 
-        <tr>
-            <td data-label="Data">28.11.2026</td>
-            <td data-label="Ora">9:20</td>
-            <td data-label="Meci">Alex V - Seven Stars</td>
-        </tr>
 
         <tr>
             <td data-label="Data">5.12.2026</td>
